@@ -1,4 +1,4 @@
-package com.codelabs.marvelapi.core.api
+package com.codelabs.marvelapi.core
 
 sealed class RequestState {
     object Loading : RequestState()

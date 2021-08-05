@@ -1,4 +1,4 @@
-package com.codelabs.marvelapi.ui.characters
+package com.codelabs.marvelapi.features.characters
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,14 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.codelabs.marvelapi.R
-import com.codelabs.marvelapi.core.api.RequestState
-import com.codelabs.marvelapi.core.api.castValue
-import com.codelabs.marvelapi.core.api.responses.BaseResponse
-import com.codelabs.marvelapi.core.api.responses.CharacterResponse
-import com.codelabs.marvelapi.ui.widgets.CustomRecyclerView
+import com.codelabs.marvelapi.core.RequestState
+import com.codelabs.marvelapi.core.api.MarvelApi
+import com.codelabs.marvelapi.core.castValue
+import com.codelabs.marvelapi.core.mappers.CharacterMapper
+import com.codelabs.marvelapi.core.models.Character
+import com.codelabs.marvelapi.features.characters.data.CharacterRemoteDataSourceImpl
+import com.codelabs.marvelapi.features.characters.data.CharacterRepositoryImpl
+import com.codelabs.marvelapi.shared.widgets.CustomRecyclerView
 
 class CharactersFragment : Fragment() {
-    private val viewModel: CharactersViewModel by viewModels()
+    private val viewModel: CharactersViewModel by viewModels { CharactersViewModel.Factory(
+        CharacterRepositoryImpl(CharacterRemoteDataSourceImpl(MarvelApi.service), CharacterMapper())
+    )}
 
     private lateinit var rvCharacters: CustomRecyclerView
 
@@ -37,8 +42,8 @@ class CharactersFragment : Fragment() {
                 is RequestState.Loading -> rvCharacters.setLoading()
                 is RequestState.Error -> rvCharacters.setMessage(state.message)
                 is RequestState.Completed<*> -> {
-                    val value = state.castValue<BaseResponse<CharacterResponse>>().value
-                    rvCharacters.setRecyclerView(CharactersAdapter(value.data.results))
+                    val value = state.castValue<List<Character>>().value
+                    rvCharacters.setRecyclerView(CharactersAdapter(value))
                 }
             }
         })

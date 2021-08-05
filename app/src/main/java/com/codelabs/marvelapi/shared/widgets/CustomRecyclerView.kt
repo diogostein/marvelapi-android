@@ -1,4 +1,4 @@
-package com.codelabs.marvelapi.ui.widgets
+package com.codelabs.marvelapi.shared.widgets
 
 import android.content.Context
 import android.util.AttributeSet

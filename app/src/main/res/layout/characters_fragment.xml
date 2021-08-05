@@ -6,9 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.characters.CharactersFragment">
+    tools:context=".features.characters.CharactersFragment">
 
-    <com.codelabs.marvelapi.ui.widgets.CustomRecyclerView
+    <com.codelabs.marvelapi.shared.widgets.CustomRecyclerView
         android:id="@+id/rvCharacters"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

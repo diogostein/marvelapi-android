@@ -2,7 +2,7 @@ package com.codelabs.marvelapi
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.codelabs.marvelapi.ui.characters.CharactersFragment
+import com.codelabs.marvelapi.features.characters.CharactersFragment
 
 class MainActivity : AppCompatActivity() {
 

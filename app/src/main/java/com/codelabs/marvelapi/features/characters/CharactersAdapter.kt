@@ -1,4 +1,4 @@
-package com.codelabs.marvelapi.ui.characters
+package com.codelabs.marvelapi.features.characters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,8 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.codelabs.marvelapi.R
 import com.codelabs.marvelapi.core.api.responses.CharacterResponse
+import com.codelabs.marvelapi.core.models.Character
 
-class CharactersAdapter(private val characters: List<CharacterResponse>)
+class CharactersAdapter(private val characters: List<Character>)
     : RecyclerView.Adapter<CharactersAdapter.CharacterViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
@@ -28,7 +29,7 @@ class CharactersAdapter(private val characters: List<CharacterResponse>)
     class CharacterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvName = itemView.findViewById<TextView>(R.id.tvName)
 
-        fun bind(character: CharacterResponse) {
+        fun bind(character: Character) {
             tvName.text = character.name
         }
     }
