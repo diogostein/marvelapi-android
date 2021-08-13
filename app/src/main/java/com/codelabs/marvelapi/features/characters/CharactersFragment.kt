@@ -8,18 +8,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.codelabs.marvelapi.R
 import com.codelabs.marvelapi.core.RequestState
-import com.codelabs.marvelapi.core.api.MarvelApi
 import com.codelabs.marvelapi.core.castValue
-import com.codelabs.marvelapi.core.mappers.CharacterMapper
 import com.codelabs.marvelapi.core.models.Character
-import com.codelabs.marvelapi.features.characters.data.CharacterRemoteDataSourceImpl
-import com.codelabs.marvelapi.features.characters.data.CharacterRepositoryImpl
 import com.codelabs.marvelapi.shared.widgets.CustomRecyclerView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CharactersFragment : Fragment() {
-    private val viewModel: CharactersViewModel by viewModels { CharactersViewModel.Factory(
-        CharacterRepositoryImpl(CharacterRemoteDataSourceImpl(MarvelApi.service), CharacterMapper())
-    )}
+    private val viewModel: CharactersViewModel by viewModels()
 
     private lateinit var rvCharacters: CustomRecyclerView
 
