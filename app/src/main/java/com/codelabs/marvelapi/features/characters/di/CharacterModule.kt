@@ -18,7 +18,7 @@ object CharacterModule {
 
     @ViewModelScoped
     @Provides
-    fun provideCharacterMapper() = CharacterMapper()
+    fun provideCharacterMapper() = CharacterMapper
 
     @ViewModelScoped
     @Provides

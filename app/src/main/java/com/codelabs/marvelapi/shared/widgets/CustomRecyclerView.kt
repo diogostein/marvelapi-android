@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codelabs.marvelapi.R
 
@@ -34,20 +35,28 @@ class CustomRecyclerView constructor(
         }
     }
 
-    fun setRecyclerView(adapter: RecyclerView.Adapter<*>? = null) {
+    fun setLayoutManager(layoutManager: RecyclerView.LayoutManager) {
+        recyclerView.layoutManager = layoutManager
+    }
+
+    fun setAdapter(adapter: RecyclerView.Adapter<*>) {
+        recyclerView.adapter = adapter
+    }
+
+    fun showRecyclerView(adapter: RecyclerView.Adapter<*>? = null) {
         recyclerView.visibility = VISIBLE
         progressBar.visibility = GONE
         tvMessage.visibility = GONE
-        if (adapter != null) recyclerView.adapter = adapter
+        if (adapter != null) setAdapter(adapter)
     }
 
-    fun setLoading() {
+    fun showProgressIndicator() {
         recyclerView.visibility = GONE
         progressBar.visibility = VISIBLE
         tvMessage.visibility = GONE
     }
 
-    fun setMessage(message: String? = null) {
+    fun showErrorMessage(message: String? = null) {
         recyclerView.visibility = GONE
         progressBar.visibility = GONE
         tvMessage.visibility = VISIBLE
