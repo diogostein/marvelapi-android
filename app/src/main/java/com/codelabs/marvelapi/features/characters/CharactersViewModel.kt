@@ -22,19 +22,23 @@ class CharactersViewModel @Inject constructor(
         if (reload) _pagination.reset()
 
         viewModelScope.launch {
-            _state.value = if (!reload) RequestState.PaginationLoading else RequestState.Loading
+            _state.postValue(
+                if (!reload) RequestState.PaginationLoading else RequestState.Loading
+            )
 
             val result = repository.getCharacters(_pagination.pageSize, _pagination.offset)
 
-            _state.value = result.fold(
-                {
-                    if (!reload) RequestState.PaginationError(it.message)
-                    else RequestState.Error(it.message)
-                },
-                {
-                    if (_pagination.refresh(it).hasReachedEndOfResults) RequestState.PaginationEnded
-                    else RequestState.Completed(_pagination)
-                }
+            _state.postValue(
+                result.fold(
+                    {
+                        if (!reload) RequestState.PaginationError(it.message)
+                        else RequestState.Error(it.message)
+                    },
+                    {
+                        if (_pagination.refresh(it).hasReachedEndOfResults) RequestState.PaginationEnded
+                        else RequestState.Completed(_pagination)
+                    }
+                )
             )
         }
     }

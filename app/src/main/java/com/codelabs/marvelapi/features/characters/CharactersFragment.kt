@@ -1,12 +1,10 @@
 package com.codelabs.marvelapi.features.characters
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class CharactersFragment : Fragment() {
     private val viewModel: CharactersViewModel by viewModels()
-    private val adapter = CharactersAdapter()
+    private val adapter = CharactersPagingAdapter()
     private val paginationScrollHandler = PaginationScrollHandler()
 
     private lateinit var customRecyclerView: CustomRecyclerView
@@ -40,15 +38,31 @@ class CharactersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         customRecyclerView = view.findViewById(R.id.rvCharacters)
-        customRecyclerView.setLayoutManager(GridLayoutManager(context, 3))
+
+        val gridLayoutManager = GridLayoutManager(context, 3)
+        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return try {
+                    val viewType = adapter.getItemViewType(position)
+                    if (viewType == CharactersAdapter.PaginationData.ITEM) 1 else 3
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    1
+                }
+            }
+        }
+
+        customRecyclerView.setLayoutManager(gridLayoutManager)
+
         customRecyclerView.setAdapter(adapter)
 
         customRecyclerView.recyclerView.addOnScrollListener(
                 paginationScrollHandler.onScrollListener(
                         customRecyclerView.recyclerView.layoutManager as LinearLayoutManager) {
-                    Log.d("DS", "onLoadMore")
             viewModel.getCharacters()
         })
+
+        adapter.onRetryClickListener = { viewModel.getCharacters() }
 
         viewModel.state.observe(viewLifecycleOwner, { state ->
             paginationScrollHandler.state = PaginationScrollHandler.State.Idle
@@ -58,15 +72,16 @@ class CharactersFragment : Fragment() {
                 is RequestState.Error -> customRecyclerView.showErrorMessage(state.message)
                 is RequestState.PaginationLoading -> {
                     paginationScrollHandler.state = PaginationScrollHandler.State.Loading
+                    adapter.showLoadingIndicator()
                 }
-                is RequestState.PaginationError -> {
-                    Toast.makeText(context, "Pagination error: ${state.message}", Toast.LENGTH_SHORT).show()
-                }
+                is RequestState.PaginationError -> adapter.showError(state.message)
                 is RequestState.PaginationEnded -> {
                     paginationScrollHandler.state = PaginationScrollHandler.State.Finished
-                    Toast.makeText(context, "Pagination ended!", Toast.LENGTH_SHORT).show()
+                    adapter.showFinished()
                 }
                 is RequestState.Completed<*> -> {
+                    adapter.hideLoadingIndicator()
+
                     val pagination = state.castValue<Pagination<Character>>().value
                     val pagingData = pagination.collectLatest
 

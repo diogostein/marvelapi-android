@@ -8,7 +8,7 @@ class PaginationScrollHandler {
     var state: State = State.Idle
 
     companion object {
-        const val DISTANCE_TO_LOAD = 20
+        const val DISTANCE_TO_LOAD = 6
     }
 
     fun onScrollListener(layoutManager: LinearLayoutManager, onLoadMoreItems: () -> Unit): RecyclerView.OnScrollListener {
@@ -20,9 +20,9 @@ class PaginationScrollHandler {
                 val totalItemCount: Int = layoutManager.itemCount
                 val firstVisibleItemPosition: Int = layoutManager.findFirstVisibleItemPosition()
 
-                Log.d("DS", "visibleItemCount: $visibleItemCount")
-                Log.d("DS", "totalItemCount: $totalItemCount")
-                Log.d("DS", "firstVisibleItemPosition: $firstVisibleItemPosition")
+//                Log.d("DS", "visibleItemCount: $visibleItemCount")
+//                Log.d("DS", "totalItemCount: $totalItemCount")
+//                Log.d("DS", "firstVisibleItemPosition: $firstVisibleItemPosition")
 
                 if (state !is State.Loading && state !is State.Finished) {
                     if (visibleItemCount + firstVisibleItemPosition >= totalItemCount - DISTANCE_TO_LOAD
