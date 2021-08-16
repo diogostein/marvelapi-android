@@ -1,7 +1,7 @@
 package com.codelabs.marvelapi.features.characters
 
 import androidx.lifecycle.*
-import com.codelabs.marvelapi.core.Pagination
+import com.codelabs.marvelapi.shared.pagination.Pagination
 import com.codelabs.marvelapi.core.RequestState
 import com.codelabs.marvelapi.core.models.Character
 import com.codelabs.marvelapi.features.characters.data.CharacterRepository

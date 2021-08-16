@@ -1,4 +1,4 @@
-package com.codelabs.marvelapi.shared.adapters
+package com.codelabs.marvelapi.shared.pagination
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.recyclerview.widget.RecyclerView
 import com.codelabs.marvelapi.R
-import com.codelabs.marvelapi.core.Pagination
 
 abstract class PagingAdapter<T, VH : PagingAdapter.BinderViewHolder<T>>
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -20,8 +19,8 @@ abstract class PagingAdapter<T, VH : PagingAdapter.BinderViewHolder<T>>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            PagingDataHolder.LOADING  -> LoadingViewHolder(inflate(parent, R.layout.item_paging_loading))
-            PagingDataHolder.ERROR    -> ErrorViewHolder(inflate(parent, R.layout.item_paging_error))
+            PagingDataHolder.LOADING -> LoadingViewHolder(inflate(parent, R.layout.item_paging_loading))
+            PagingDataHolder.ERROR -> ErrorViewHolder(inflate(parent, R.layout.item_paging_error))
             PagingDataHolder.FINISHED -> FinishedViewHolder(inflate(parent, R.layout.item_paging_finished))
             else                      -> onCreateItemViewHolder(parent, viewType)
         }
@@ -34,7 +33,7 @@ abstract class PagingAdapter<T, VH : PagingAdapter.BinderViewHolder<T>>
         val item = items[position]
 
         when (holder.itemViewType) {
-            PagingDataHolder.ITEM  -> onBindItemViewHolder(holder as VH, position)
+            PagingDataHolder.ITEM -> onBindItemViewHolder(holder as VH, position)
             PagingDataHolder.ERROR -> (holder as ErrorViewHolder).bind((item as PagingDataHolder.Error))
         }
     }

@@ -7,7 +7,7 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.codelabs.marvelapi.R
 import com.codelabs.marvelapi.core.models.Character
-import com.codelabs.marvelapi.shared.adapters.PagingAdapter
+import com.codelabs.marvelapi.shared.pagination.PagingAdapter
 
 class CharactersPagingAdapter
     : PagingAdapter<Character, CharactersPagingAdapter.CharacterViewHolder>() {

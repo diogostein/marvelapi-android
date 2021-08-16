@@ -5,15 +5,14 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codelabs.marvelapi.R
 
-class CustomRecyclerView constructor(
+class ResultStateView constructor(
         context: Context,
         attrs: AttributeSet?
 ) : FrameLayout(context, attrs) {
-    private val view = inflate(context, R.layout.custom_recycler_view, this)
+    private val view = inflate(context, R.layout.result_state_view, this)
 
     val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
     val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
@@ -27,9 +26,9 @@ class CustomRecyclerView constructor(
 
     private fun setLayout(attrs: AttributeSet?) {
         attrs?.let { attributeSet ->
-            val attributes = context.obtainStyledAttributes(attributeSet, R.styleable.CustomRecyclerView)
+            val attributes = context.obtainStyledAttributes(attributeSet, R.styleable.ResultStateView)
 
-            hasDivider = attributes.getBoolean(R.styleable.CustomRecyclerView_has_divider, false)
+            hasDivider = attributes.getBoolean(R.styleable.ResultStateView_has_divider, false)
 
             attributes.recycle()
         }
@@ -41,6 +40,10 @@ class CustomRecyclerView constructor(
 
     fun setAdapter(adapter: RecyclerView.Adapter<*>) {
         recyclerView.adapter = adapter
+    }
+
+    fun addOnScrollListener(onScrolListener: RecyclerView.OnScrollListener) {
+        recyclerView.addOnScrollListener(onScrolListener)
     }
 
     fun showRecyclerView(adapter: RecyclerView.Adapter<*>? = null) {

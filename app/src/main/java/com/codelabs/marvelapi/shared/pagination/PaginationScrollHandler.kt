@@ -1,6 +1,5 @@
-package com.codelabs.marvelapi.shared.handlers
+package com.codelabs.marvelapi.shared.pagination
 
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -11,10 +10,12 @@ class PaginationScrollHandler {
         const val DISTANCE_TO_LOAD = 6
     }
 
-    fun onScrollListener(layoutManager: LinearLayoutManager, onLoadMoreItems: () -> Unit): RecyclerView.OnScrollListener {
+    fun onScrollListener(onLoadMoreItems: () -> Unit): RecyclerView.OnScrollListener {
         return object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
+
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
 
                 val visibleItemCount: Int = layoutManager.childCount
                 val totalItemCount: Int = layoutManager.itemCount

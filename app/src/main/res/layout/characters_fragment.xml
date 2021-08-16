@@ -8,8 +8,8 @@
     android:orientation="vertical"
     tools:context=".features.characters.CharactersFragment">
     
-    <com.codelabs.marvelapi.shared.widgets.CustomRecyclerView
-        android:id="@+id/rvCharacters"
+    <com.codelabs.marvelapi.shared.widgets.ResultStateView
+        android:id="@+id/resultStateView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="1dp" />

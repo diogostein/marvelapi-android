@@ -1,4 +1,4 @@
-package com.codelabs.marvelapi.core
+package com.codelabs.marvelapi.shared.pagination
 
 class Pagination<T>(val pageSize: Int) {
     private var _nextPage = 1

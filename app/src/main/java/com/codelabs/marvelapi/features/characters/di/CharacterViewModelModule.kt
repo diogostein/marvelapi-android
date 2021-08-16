@@ -14,7 +14,7 @@ import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
 @InstallIn(ViewModelComponent::class)
-object CharacterModule {
+object CharacterViewModelModule {
 
     @ViewModelScoped
     @Provides
