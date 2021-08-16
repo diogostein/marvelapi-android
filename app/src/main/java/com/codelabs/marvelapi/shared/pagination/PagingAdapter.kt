@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.recyclerview.widget.RecyclerView
 import com.codelabs.marvelapi.R
+import com.codelabs.marvelapi.databinding.ItemPagingErrorBinding
 
 abstract class PagingAdapter<T, VH : PagingAdapter.BinderViewHolder<T>>
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -19,8 +20,8 @@ abstract class PagingAdapter<T, VH : PagingAdapter.BinderViewHolder<T>>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            PagingDataHolder.LOADING -> LoadingViewHolder(inflate(parent, R.layout.item_paging_loading))
-            PagingDataHolder.ERROR -> ErrorViewHolder(inflate(parent, R.layout.item_paging_error))
+            PagingDataHolder.LOADING  -> LoadingViewHolder(inflate(parent, R.layout.item_paging_loading))
+            PagingDataHolder.ERROR    -> ErrorViewHolder(inflate(parent, R.layout.item_paging_error))
             PagingDataHolder.FINISHED -> FinishedViewHolder(inflate(parent, R.layout.item_paging_finished))
             else                      -> onCreateItemViewHolder(parent, viewType)
         }
@@ -33,7 +34,7 @@ abstract class PagingAdapter<T, VH : PagingAdapter.BinderViewHolder<T>>
         val item = items[position]
 
         when (holder.itemViewType) {
-            PagingDataHolder.ITEM -> onBindItemViewHolder(holder as VH, position)
+            PagingDataHolder.ITEM  -> onBindItemViewHolder(holder as VH, position)
             PagingDataHolder.ERROR -> (holder as ErrorViewHolder).bind((item as PagingDataHolder.Error))
         }
     }
@@ -119,12 +120,11 @@ abstract class PagingAdapter<T, VH : PagingAdapter.BinderViewHolder<T>>
     private class FinishedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     private class ErrorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val tvMessage = itemView.findViewById<TextView>(R.id.tvMessage)
-        private val btnReload = itemView.findViewById<AppCompatButton>(R.id.btnReload)
+        private val binding = ItemPagingErrorBinding.bind(itemView)
 
         fun bind(error: PagingDataHolder.Error) {
-            tvMessage.text = error.message
-            btnReload.setOnClickListener { error.onRetryClickListener?.invoke() }
+            binding.tvMessage.text = error.message
+            binding.btnReload.setOnClickListener { error.onRetryClickListener?.invoke() }
         }
     }
 
