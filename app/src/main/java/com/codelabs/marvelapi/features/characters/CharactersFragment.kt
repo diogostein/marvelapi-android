@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.codelabs.marvelapi.R
 import com.codelabs.marvelapi.core.Pagination
 import com.codelabs.marvelapi.core.RequestState
-import com.codelabs.marvelapi.core.castValue
 import com.codelabs.marvelapi.core.models.Character
+import com.codelabs.marvelapi.shared.adapters.PagingAdapter
 import com.codelabs.marvelapi.shared.handlers.PaginationScrollHandler
 import com.codelabs.marvelapi.shared.widgets.CustomRecyclerView
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,7 +44,7 @@ class CharactersFragment : Fragment() {
             override fun getSpanSize(position: Int): Int {
                 return try {
                     val viewType = adapter.getItemViewType(position)
-                    if (viewType == CharactersAdapter.PaginationData.ITEM) 1 else 3
+                    if (viewType == PagingAdapter.PagingDataHolder.ITEM) 1 else 3
                 } catch (e: Exception) {
                     e.printStackTrace()
                     1
@@ -68,31 +68,43 @@ class CharactersFragment : Fragment() {
             paginationScrollHandler.state = PaginationScrollHandler.State.Idle
 
             when (state) {
-                is RequestState.Loading -> customRecyclerView.showProgressIndicator()
-                is RequestState.Error -> customRecyclerView.showErrorMessage(state.message)
-                is RequestState.PaginationLoading -> {
-                    paginationScrollHandler.state = PaginationScrollHandler.State.Loading
-                    adapter.showLoadingIndicator()
-                }
-                is RequestState.PaginationError -> adapter.showError(state.message)
-                is RequestState.PaginationEnded -> {
-                    paginationScrollHandler.state = PaginationScrollHandler.State.Finished
-                    adapter.showFinished()
-                }
-                is RequestState.Completed<*> -> {
-                    adapter.hideLoadingIndicator()
-
-                    val pagination = state.castValue<Pagination<Character>>().value
-                    val pagingData = pagination.collectLatest
-
-                    if (pagingData != null) {
-                        adapter.submitData(pagingData)
-                        customRecyclerView.showRecyclerView()
-                    }
-                }
+                is RequestState.Loading -> onLoading()
+                is RequestState.Error -> onError(state.message)
+                is RequestState.PaginationLoading -> onPaginationLoading()
+                is RequestState.PaginationError -> onPaginationError(state.message)
+                is RequestState.PaginationFinished -> onPaginationFinished()
+                is RequestState.Completed<*> ->
+                    onPaginationCompleted((state as RequestState.Completed<Pagination<Character>>).value)
             }
         })
 
         viewModel.getCharacters(true)
+    }
+
+    private fun onLoading() = customRecyclerView.showProgressIndicator()
+
+    private fun onError(message: String) = customRecyclerView.showErrorMessage(message)
+
+    private fun onPaginationLoading() {
+        paginationScrollHandler.state = PaginationScrollHandler.State.Loading
+        adapter.showLoadingIndicator()
+    }
+
+    private fun onPaginationError(message: String) = adapter.showError(message)
+
+    private fun onPaginationFinished() {
+        paginationScrollHandler.state = PaginationScrollHandler.State.Finished
+        adapter.showFinished()
+    }
+
+    private fun onPaginationCompleted(pagination: Pagination<Character>) {
+        adapter.hideLoadingIndicator()
+
+        val pagingData = pagination.collectLatest
+
+        if (pagingData != null) {
+            adapter.submitData(pagingData)
+            customRecyclerView.showRecyclerView()
+        }
     }
 }

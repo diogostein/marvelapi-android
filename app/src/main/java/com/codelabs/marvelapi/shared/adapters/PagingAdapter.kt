@@ -115,11 +115,11 @@ abstract class PagingAdapter<T, VH : PagingAdapter.BinderViewHolder<T>>
         abstract fun bind(value: T)
     }
 
-    class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    private class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
-    class FinishedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    private class FinishedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
-    class ErrorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    private class ErrorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvMessage = itemView.findViewById<TextView>(R.id.tvMessage)
         private val btnReload = itemView.findViewById<AppCompatButton>(R.id.btnReload)
 

@@ -1,14 +1,14 @@
 package com.codelabs.marvelapi.core
 
-sealed class RequestState {
-    object Loading : RequestState()
-    class Error(val message: String) : RequestState()
-    class Completed<T>(val value: T) : RequestState()
+sealed class RequestState<out T> {
+    object Loading : RequestState<Nothing>()
+    class Error(val message: String) : RequestState<Nothing>()
+    class Completed<C>(val value: C) : RequestState<C>()
 
-    object PaginationLoading : RequestState()
-    class PaginationError(val message: String) : RequestState()
-    object PaginationEnded : RequestState()
+    object PaginationLoading : RequestState<Nothing>()
+    class PaginationError(val message: String) : RequestState<Nothing>()
+    object PaginationFinished : RequestState<Nothing>()
 }
 
-@Suppress("UNCHECKED_CAST")
-inline fun <reified T : Any> RequestState.Completed<*>.castValue() = this as RequestState.Completed<T>
+//@Suppress("UNCHECKED_CAST")
+//inline fun <reified T : Any> RequestState.Completed<*>.castValue() = this as RequestState.Completed<T>

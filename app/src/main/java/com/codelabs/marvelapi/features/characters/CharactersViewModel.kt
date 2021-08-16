@@ -13,10 +13,10 @@ import javax.inject.Inject
 class CharactersViewModel @Inject constructor(
     private val repository: CharacterRepository,
 ) : ViewModel() {
-    private val _state = MutableLiveData<RequestState>()
+    private val _state = MutableLiveData<RequestState<Pagination<Character>>>()
     private val _pagination = Pagination<Character>(40)
 
-    val state: LiveData<RequestState> = _state
+    val state: LiveData<RequestState<Pagination<Character>>> = _state
 
     fun getCharacters(reload: Boolean = false) {
         if (reload) _pagination.reset()
@@ -35,7 +35,7 @@ class CharactersViewModel @Inject constructor(
                         else RequestState.Error(it.message)
                     },
                     {
-                        if (_pagination.refresh(it).hasReachedEndOfResults) RequestState.PaginationEnded
+                        if (_pagination.refresh(it).hasReachedEndOfResults) RequestState.PaginationFinished
                         else RequestState.Completed(_pagination)
                     }
                 )

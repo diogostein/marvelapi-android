@@ -2,7 +2,6 @@ package com.codelabs.marvelapi.core.api
 
 import com.codelabs.marvelapi.core.api.responses.CharacterResponse
 import com.codelabs.marvelapi.core.api.responses.BaseResponse
-import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
