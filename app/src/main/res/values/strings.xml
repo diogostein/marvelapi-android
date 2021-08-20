@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Marvel API</string>
+
+    <string name="reload">Recarregar</string>
 </resources>

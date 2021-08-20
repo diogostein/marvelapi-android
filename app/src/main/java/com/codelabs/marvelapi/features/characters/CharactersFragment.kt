@@ -36,13 +36,12 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
         with (paginationController) {
             layoutManager = GridLayoutManager(context, 3)
             setOnRetryClickListener { viewModel.getCharacters() }
-        }
 
-        with (binding.resultStateView) {
-            with (paginationController) {
-                setLayoutManager(layoutManager as GridLayoutManager)
-                setAdapter(pagingAdapter)
-                addOnScrollListener(getOnPagingScrollListener { viewModel.getCharacters() })
+            binding.resultStateView.let {
+                it.setLayoutManager(layoutManager as GridLayoutManager)
+                it.setAdapter(pagingAdapter)
+                it.addOnScrollListener(getOnPagingScrollListener { viewModel.getCharacters() })
+                it.setOnRetryClickListener { viewModel.getCharacters(true) }
             }
         }
 
@@ -70,7 +69,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
 
     private fun onLoading() = binding.resultStateView.showProgressIndicator()
 
-    private fun onError(message: String) = binding.resultStateView.showErrorMessage(message)
+    private fun onError(message: String) = binding.resultStateView.showError(message)
 
     private fun onCompleted(pagination: Pagination<Character>) {
         paginationController.setCompleted(pagination) {

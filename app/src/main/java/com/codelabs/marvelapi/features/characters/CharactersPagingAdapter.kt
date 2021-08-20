@@ -31,7 +31,7 @@ class CharactersPagingAdapter
 
             Glide.with(itemView)
                     .load(value.thumbnail.url)
-                    .placeholder(R.drawable.ic_launcher_background)
+                    .placeholder(R.drawable.marvel_placeholder)
                     .into(binding.ivAvatar)
         }
     }

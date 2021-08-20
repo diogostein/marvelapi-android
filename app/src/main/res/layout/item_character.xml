@@ -8,22 +8,23 @@
     <ImageView
         android:id="@+id/ivAvatar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="100dp"
         android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/tvName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:gravity="start"
         android:layout_gravity="bottom|center"
-        android:paddingBottom="4dp"
+        android:padding="4dp"
+        android:paddingTop="@dimen/spacing"
         android:textColor="@color/white"
         android:textStyle="bold"
         android:shadowColor="@color/black"
         android:shadowDx="1"
         android:shadowDy="2"
         android:shadowRadius="2"
-        android:background="#80000000" />
+        android:background="@drawable/label_backdrop" />
 
 </FrameLayout>

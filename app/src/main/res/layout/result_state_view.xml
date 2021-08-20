@@ -18,12 +18,29 @@
         android:indeterminate="true"
         android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/textView"
+    <LinearLayout
+        android:id="@+id/viewGroupError"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/spacing"
+        android:layout_gravity="center"
         android:gravity="center"
-        android:visibility="gone" />
+        android:layout_margin="@dimen/spacing"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnReload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:backgroundTint="?attr/colorSecondary"
+            android:text="@string/reload" />
+
+    </LinearLayout>
 
 </merge>

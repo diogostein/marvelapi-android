@@ -2,21 +2,17 @@ package com.codelabs.marvelapi.shared.widgets
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.widget.FrameLayout
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.codelabs.marvelapi.R
+import com.codelabs.marvelapi.databinding.ResultStateViewBinding
 
 class ResultStateView constructor(
-        context: Context,
-        attrs: AttributeSet?
+    context: Context,
+    attrs: AttributeSet?,
 ) : FrameLayout(context, attrs) {
-    private val view = inflate(context, R.layout.result_state_view, this)
-
-    val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-    val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
-    val tvMessage = view.findViewById<TextView>(R.id.textView)
+    private val binding = ResultStateViewBinding.inflate(LayoutInflater.from(context), this)
 
     private var hasDivider: Boolean = false
 
@@ -35,34 +31,42 @@ class ResultStateView constructor(
     }
 
     fun setLayoutManager(layoutManager: RecyclerView.LayoutManager) {
-        recyclerView.layoutManager = layoutManager
+        binding.recyclerView.layoutManager = layoutManager
     }
 
     fun setAdapter(adapter: RecyclerView.Adapter<*>) {
-        recyclerView.adapter = adapter
+        binding.recyclerView.adapter = adapter
     }
 
-    fun addOnScrollListener(onScrolListener: RecyclerView.OnScrollListener) {
-        recyclerView.addOnScrollListener(onScrolListener)
+    fun addOnScrollListener(onScrollListener: RecyclerView.OnScrollListener) {
+        binding.recyclerView.addOnScrollListener(onScrollListener)
+    }
+
+    fun setOnRetryClickListener(onRetryClickListener: OnClickListener) {
+        binding.btnReload.setOnClickListener(onRetryClickListener)
     }
 
     fun showRecyclerView(adapter: RecyclerView.Adapter<*>? = null) {
-        recyclerView.visibility = VISIBLE
-        progressBar.visibility = GONE
-        tvMessage.visibility = GONE
+        binding.recyclerView.visibility = VISIBLE
+        binding.progressBar.visibility = GONE
+        setErrorVisibility(GONE)
         if (adapter != null) setAdapter(adapter)
     }
 
     fun showProgressIndicator() {
-        recyclerView.visibility = GONE
-        progressBar.visibility = VISIBLE
-        tvMessage.visibility = GONE
+        binding.recyclerView.visibility = GONE
+        binding.progressBar.visibility = VISIBLE
+        setErrorVisibility(GONE)
     }
 
-    fun showErrorMessage(message: String? = null) {
-        recyclerView.visibility = GONE
-        progressBar.visibility = GONE
-        tvMessage.visibility = VISIBLE
-        tvMessage.text = message
+    fun showError(message: String? = null) {
+        binding.recyclerView.visibility = GONE
+        binding.progressBar.visibility = GONE
+        setErrorVisibility(VISIBLE, message)
+    }
+
+    private fun setErrorVisibility(visibility: Int, message: String? = null) {
+        binding.viewGroupError.visibility = visibility
+        binding.tvMessage.text = message
     }
 }
