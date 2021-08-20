@@ -18,7 +18,7 @@ class CharactersViewModel @Inject constructor(
 
     val state: LiveData<ResultState<Pagination<Character>>> = _state
 
-    fun getCharacters(reload: Boolean = false) {
+    fun getCharacters(reload: Boolean = false, query: String? = null) {
         if (reload) _pagination.reset()
 
         viewModelScope.launch {
@@ -26,7 +26,7 @@ class CharactersViewModel @Inject constructor(
                 if (!reload) ResultState.PaginationLoading else ResultState.Loading
             )
 
-            val result = repository.getCharacters(_pagination.pageSize, _pagination.offset)
+            val result = repository.getCharacters(_pagination.pageSize, _pagination.offset, query)
 
             _state.postValue(
                 result.fold(

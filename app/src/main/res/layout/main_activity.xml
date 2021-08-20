@@ -8,22 +8,20 @@
     tools:context=".MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:paddingRight="@dimen/spacing"
-            android:paddingEnd="@dimen/spacing"
-            app:layout_scrollFlags="scroll|enterAlways"
-            tools:ignore="RtlSymmetry">
+            style="@style/ToolbarTheme"
+            android:id="@+id/toolbar"
+            app:layout_scrollFlags="scroll|enterAlways">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
-                android:src="@drawable/marvel_logo"
-                android:contentDescription="@string/app_name" />
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/marvel_logo" />
 
         </androidx.appcompat.widget.Toolbar>
 

@@ -9,16 +9,16 @@ import com.codelabs.marvelapi.core.errors.Failure
 import retrofit2.HttpException
 
 interface CharacterRemoteDataSource {
-    suspend fun getCharacters(limit: Int, offset: Int): Either<Failure, BaseResponse<CharacterResponse>>
+    suspend fun getCharacters(limit: Int, offset: Int, query: String?): Either<Failure, BaseResponse<CharacterResponse>>
 }
 
 class CharacterRemoteDataSourceImpl(
     private val apiService: MarvelApiService,
 ) : CharacterRemoteDataSource {
 
-    override suspend fun getCharacters(limit: Int, offset: Int): Either<Failure, BaseResponse<CharacterResponse>> {
+    override suspend fun getCharacters(limit: Int, offset: Int, query: String?): Either<Failure, BaseResponse<CharacterResponse>> {
         return try {
-            val response = apiService.getCharacters(limit, offset)
+            val response = apiService.getCharacters(limit, offset, query)
 
             Either.Right(response)
         } catch (e: HttpException) {

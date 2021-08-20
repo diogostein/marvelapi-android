@@ -6,7 +6,7 @@ import com.codelabs.marvelapi.core.mappers.CharacterMapper
 import com.codelabs.marvelapi.core.models.Character
 
 interface CharacterRepository {
-    suspend fun getCharacters(limit: Int, offset: Int): Either<Failure, List<Character>>
+    suspend fun getCharacters(limit: Int, offset: Int, query: String?): Either<Failure, List<Character>>
 }
 
 class CharacterRepositoryImpl(
@@ -14,8 +14,8 @@ class CharacterRepositoryImpl(
     private val characterMapper: CharacterMapper,
 ) : CharacterRepository {
 
-    override suspend fun getCharacters(limit: Int, offset: Int): Either<Failure, List<Character>> {
-        val result = remoteDataSource.getCharacters(limit, offset)
+    override suspend fun getCharacters(limit: Int, offset: Int, query: String?): Either<Failure, List<Character>> {
+        val result = remoteDataSource.getCharacters(limit, offset, query)
 
         return result.fold(
             { Either.Left(it) },

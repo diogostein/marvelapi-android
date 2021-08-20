@@ -54,6 +54,11 @@ abstract class PagingAdapter<T, VH : PagingAdapter.BinderViewHolder<T>>
         notifyDataSetChanged()
     }
 
+    fun clear() {
+        items.clear()
+        notifyDataSetChanged()
+    }
+
     fun showLoadingIndicator() {
         hideError()
         hideFinished()

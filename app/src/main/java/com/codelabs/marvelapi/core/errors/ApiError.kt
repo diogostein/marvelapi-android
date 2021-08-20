@@ -4,7 +4,7 @@ class ApiError(val code: String? = null, val message: String? = null) {
 
     fun getFailure(): Failure = when (code) {
         "InvalidCredentials" -> Failure.InvalidCredentials()
-        else -> Failure.Server()
+        else -> Failure.Server(message)
     }
 
 }

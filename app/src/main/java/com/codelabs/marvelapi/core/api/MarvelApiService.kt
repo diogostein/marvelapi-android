@@ -10,5 +10,6 @@ interface MarvelApiService {
     suspend fun getCharacters(
         @Query("limit") limit: Int,
         @Query("offset") offset: Int,
+        @Query("nameStartsWith") query: String?
     ): BaseResponse<CharacterResponse>
 }

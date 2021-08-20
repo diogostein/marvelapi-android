@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.codelabs.marvelapi.R
 import com.codelabs.marvelapi.databinding.ResultStateViewBinding
 
@@ -18,6 +19,8 @@ class ResultStateView constructor(
 
     init {
         setLayout(attrs)
+
+        binding.swipeRefresh.isEnabled = false
     }
 
     private fun setLayout(attrs: AttributeSet?) {
@@ -46,22 +49,29 @@ class ResultStateView constructor(
         binding.btnReload.setOnClickListener(onRetryClickListener)
     }
 
+    fun setOnRefreshListener(onRefreshListener: SwipeRefreshLayout.OnRefreshListener) {
+        with (binding.swipeRefresh) {
+            isEnabled = true
+            setOnRefreshListener(onRefreshListener)
+        }
+    }
+
     fun showRecyclerView(adapter: RecyclerView.Adapter<*>? = null) {
         binding.recyclerView.visibility = VISIBLE
-        binding.progressBar.visibility = GONE
+        binding.swipeRefresh.isRefreshing = false
         setErrorVisibility(GONE)
         if (adapter != null) setAdapter(adapter)
     }
 
     fun showProgressIndicator() {
         binding.recyclerView.visibility = GONE
-        binding.progressBar.visibility = VISIBLE
+        binding.swipeRefresh.isRefreshing = true
         setErrorVisibility(GONE)
     }
 
     fun showError(message: String? = null) {
         binding.recyclerView.visibility = GONE
-        binding.progressBar.visibility = GONE
+        binding.swipeRefresh.isRefreshing = false
         setErrorVisibility(VISIBLE, message)
     }
 
