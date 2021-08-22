@@ -6,6 +6,7 @@ import com.codelabs.marvelapi.core.models.Character
 object CharacterMapper : Mapper<CharacterResponse, Character>() {
     override fun map(input: CharacterResponse): Character {
         return Character(
+            id = input.id,
             name = input.name,
             thumbnail = ImageMapper.map(input.thumbnail),
         )

@@ -3,4 +3,6 @@
 
     <string name="reload">Recarregar</string>
     <string name="find_your_hero">Encontre seu herói</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

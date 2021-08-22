@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.recyclerview.widget.RecyclerView
 import com.codelabs.marvelapi.R
+import com.codelabs.marvelapi.core.models.Character
 import com.codelabs.marvelapi.databinding.ItemPagingErrorBinding
 
 abstract class PagingAdapter<T, VH : PagingAdapter.BinderViewHolder<T>>
@@ -14,6 +15,7 @@ abstract class PagingAdapter<T, VH : PagingAdapter.BinderViewHolder<T>>
 
     protected val items = mutableListOf<PagingDataHolder<T>>()
 
+    var onItemClickListener: ((value: T) -> Unit)? = null
     var onRetryClickListener: (() -> Unit)? = null
 
     abstract fun onCreateItemViewHolder(parent: ViewGroup, viewType: Int): VH
@@ -117,7 +119,9 @@ abstract class PagingAdapter<T, VH : PagingAdapter.BinderViewHolder<T>>
     }
 
     abstract class BinderViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        protected abstract var value: T
         abstract fun bind(value: T)
+        open fun setOnItemClickListener(listener: ((value: T) -> Unit)? = null) {}
     }
 
     private class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)

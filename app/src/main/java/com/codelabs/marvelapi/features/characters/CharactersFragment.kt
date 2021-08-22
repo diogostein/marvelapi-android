@@ -1,5 +1,6 @@
 package com.codelabs.marvelapi.features.characters
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -8,11 +9,14 @@ import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import com.codelabs.marvelapi.MainActivity
 import com.codelabs.marvelapi.R
 import com.codelabs.marvelapi.shared.pagination.Pagination
 import com.codelabs.marvelapi.core.ResultState
 import com.codelabs.marvelapi.core.models.Character
 import com.codelabs.marvelapi.databinding.CharactersFragmentBinding
+import com.codelabs.marvelapi.features.characterdetail.CharacterDetailActivity
+import com.codelabs.marvelapi.features.characterdetail.CharacterDetailFragment
 import com.codelabs.marvelapi.shared.listeners.SearchViewTextListener
 import com.codelabs.marvelapi.shared.pagination.PaginationController
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,6 +40,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setHasOptionsMenu(true)
     }
 
@@ -44,9 +49,16 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
 
         _binding = CharactersFragmentBinding.bind(view)
 
-        with (paginationController) {
+        paginationController.apply {
             layoutManager = GridLayoutManager(context, 3)
             setOnRetryClickListener { viewModel.getCharacters(query = querySearch) }
+            setOnItemClickListener {
+                startActivity(Intent(context, CharacterDetailActivity::class.java).apply {
+                    putExtras(Bundle().apply {
+                        putInt(CharacterDetailActivity.ARG_CHARACTER_ID, it.id)
+                    })
+                })
+            }
 
             binding.resultStateView.let {
                 it.setLayoutManager(layoutManager as GridLayoutManager)
@@ -65,7 +77,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
                 is ResultState.Error -> onError(state.message)
                 is ResultState.PaginationLoading -> paginationController.setLoading()
                 is ResultState.PaginationError -> paginationController.setError(state.message)
-                is ResultState.PaginationFinished -> paginationController.setFinished()
+                is ResultState.PaginationFinished -> onPaginationFinished()
                 is ResultState.Completed<*> ->
                     onCompleted((state as ResultState.Completed<Pagination<Character>>).value)
             }
@@ -77,23 +89,6 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun reload() {
-        paginationController.pagingAdapter.clear()
-        viewModel.getCharacters(true, querySearch)
-    }
-
-    private fun onLoading() = binding.resultStateView.showProgressIndicator()
-
-    private fun onError(message: String) {
-        binding.resultStateView.showError(message)
-    }
-
-    private fun onCompleted(pagination: Pagination<Character>) {
-        paginationController.setCompleted(pagination) {
-            binding.resultStateView.showRecyclerView()
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -114,5 +109,27 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
         searchView.setOnQueryTextListener(listener)
 
         super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    private fun reload() {
+        paginationController.pagingAdapter.clear()
+        viewModel.getCharacters(true, querySearch)
+    }
+
+    private fun onLoading() = binding.resultStateView.showProgressIndicator()
+
+    private fun onError(message: String) {
+        binding.resultStateView.showError(message)
+    }
+
+    private fun onCompleted(pagination: Pagination<Character>) {
+        paginationController.setCompleted(pagination) {
+            binding.resultStateView.showRecyclerView()
+        }
+    }
+
+    private fun onPaginationFinished() {
+        binding.resultStateView.showRecyclerView()
+        paginationController.setFinished()
     }
 }

@@ -29,6 +29,10 @@ class PaginationController<T, VH : PagingAdapter.BinderViewHolder<T>>(
             }
         }
 
+    fun setOnItemClickListener(onItemClickListener: (value: T) -> Unit) {
+        pagingAdapter.onItemClickListener = onItemClickListener
+    }
+
     fun setOnRetryClickListener(onRetryClickListener: () -> Unit) {
         pagingAdapter.onRetryClickListener = onRetryClickListener
     }
@@ -65,6 +69,8 @@ class PaginationController<T, VH : PagingAdapter.BinderViewHolder<T>>(
         if (pagingData != null) {
             pagingAdapter.submitData(pagingData)
             onAdapterRefreshed.invoke()
+        } else {
+            setFinished()
         }
     }
 
