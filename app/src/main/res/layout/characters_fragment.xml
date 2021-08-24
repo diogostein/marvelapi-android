@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context=".features.characters.CharactersFragment">
     
-    <com.codelabs.marvelapi.shared.widgets.ResultStateView
+    <com.codelabs.marvelapi.shared.views.ListStateView
         android:id="@+id/resultStateView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

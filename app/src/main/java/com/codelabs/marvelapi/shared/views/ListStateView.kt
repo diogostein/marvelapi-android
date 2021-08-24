@@ -1,4 +1,4 @@
-package com.codelabs.marvelapi.shared.widgets
+package com.codelabs.marvelapi.shared.views
 
 import android.content.Context
 import android.util.AttributeSet
@@ -7,13 +7,13 @@ import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.codelabs.marvelapi.R
-import com.codelabs.marvelapi.databinding.ResultStateViewBinding
+import com.codelabs.marvelapi.databinding.ListStateViewBinding
 
-class ResultStateView constructor(
+class ListStateView constructor(
     context: Context,
     attrs: AttributeSet?,
 ) : FrameLayout(context, attrs) {
-    private val binding = ResultStateViewBinding.inflate(LayoutInflater.from(context), this)
+    private val binding = ListStateViewBinding.inflate(LayoutInflater.from(context), this)
 
     private var hasDivider: Boolean = false
 
@@ -25,9 +25,9 @@ class ResultStateView constructor(
 
     private fun setLayout(attrs: AttributeSet?) {
         attrs?.let { attributeSet ->
-            val attributes = context.obtainStyledAttributes(attributeSet, R.styleable.ResultStateView)
+            val attributes = context.obtainStyledAttributes(attributeSet, R.styleable.ListStateView)
 
-            hasDivider = attributes.getBoolean(R.styleable.ResultStateView_has_divider, false)
+            hasDivider = attributes.getBoolean(R.styleable.ListStateView_has_divider, false)
 
             attributes.recycle()
         }
@@ -46,7 +46,7 @@ class ResultStateView constructor(
     }
 
     fun setOnRetryClickListener(onRetryClickListener: OnClickListener) {
-        binding.btnReload.setOnClickListener(onRetryClickListener)
+        binding.includeError.btnReload.setOnClickListener(onRetryClickListener)
     }
 
     fun setOnRefreshListener(onRefreshListener: SwipeRefreshLayout.OnRefreshListener) {
@@ -76,7 +76,9 @@ class ResultStateView constructor(
     }
 
     private fun setErrorVisibility(visibility: Int, message: String? = null) {
-        binding.viewGroupError.visibility = visibility
-        binding.tvMessage.text = message
+        binding.includeError.apply {
+            viewGroupError.visibility = visibility
+            tvMessage.text = message
+        }
     }
 }

@@ -34,7 +34,7 @@ class CharactersPagingAdapter
 
             Glide.with(itemView)
                     .load(value.thumbnail.url)
-                    .placeholder(R.drawable.marvel_placeholder)
+                    .placeholder(R.drawable.marvel_placeholder_thumb)
                     .into(binding.ivAvatar)
         }
 

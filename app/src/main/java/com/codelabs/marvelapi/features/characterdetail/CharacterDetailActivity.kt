@@ -2,14 +2,11 @@ package com.codelabs.marvelapi.features.characterdetail
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.codelabs.marvelapi.R
 import com.codelabs.marvelapi.core.models.Character
 import com.codelabs.marvelapi.databinding.CharacterDetailActivityBinding
-import com.codelabs.marvelapi.databinding.MainActivityBinding
-import com.codelabs.marvelapi.features.characters.CharactersFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -30,8 +27,10 @@ class CharacterDetailActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        binding.collapsingToolbar.title = " "
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = getColor(android.R.color.transparent)
+            window.statusBarColor = ContextCompat.getColor(this, android.R.color.transparent)
         }
 
         if (savedInstanceState == null) {
@@ -42,16 +41,18 @@ class CharacterDetailActivity : AppCompatActivity() {
                 .replace(R.id.container, CharacterDetailFragment.newInstance(characterId))
                 .commit()
         }
+
+        binding.collapsingToolbar.setOnClickListener {
+            finish()
+        }
     }
 
     fun fillAppBar(character: Character) {
-        println("printa poha!!!!")
-        println(character.name)
         binding.collapsingToolbar.title = character.name
 
         Glide.with(this)
             .load(character.thumbnail.url)
-            .placeholder(R.drawable.marvel_placeholder)
+            .placeholder(R.drawable.marvel_placeholder_medium)
             .into(binding.ivCollapsing)
     }
 }

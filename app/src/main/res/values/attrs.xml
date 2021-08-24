@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="ResultStateView">
+    <declare-styleable name="ListStateView">
         <attr name="has_divider" format="boolean"/>
     </declare-styleable>
 

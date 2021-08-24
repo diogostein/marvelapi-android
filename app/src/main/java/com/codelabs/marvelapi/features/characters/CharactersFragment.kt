@@ -1,6 +1,7 @@
 package com.codelabs.marvelapi.features.characters
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -9,14 +10,12 @@ import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import com.codelabs.marvelapi.MainActivity
 import com.codelabs.marvelapi.R
 import com.codelabs.marvelapi.shared.pagination.Pagination
 import com.codelabs.marvelapi.core.ResultState
 import com.codelabs.marvelapi.core.models.Character
 import com.codelabs.marvelapi.databinding.CharactersFragmentBinding
 import com.codelabs.marvelapi.features.characterdetail.CharacterDetailActivity
-import com.codelabs.marvelapi.features.characterdetail.CharacterDetailFragment
 import com.codelabs.marvelapi.shared.listeners.SearchViewTextListener
 import com.codelabs.marvelapi.shared.pagination.PaginationController
 import dagger.hilt.android.AndroidEntryPoint
@@ -69,7 +68,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
             }
         }
 
-        viewModel.state.observe(viewLifecycleOwner, { state ->
+        viewModel.state.observe(viewLifecycleOwner) { state ->
             paginationController.setIdle()
 
             when (state) {
@@ -81,7 +80,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
                 is ResultState.Completed<*> ->
                     onCompleted((state as ResultState.Completed<Pagination<Character>>).value)
             }
-        })
+        }
 
         reload()
     }
@@ -107,6 +106,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
 
         searchView.queryHint = getString(R.string.find_your_hero)
         searchView.setOnQueryTextListener(listener)
+        searchView.setBackgroundColor(Color.TRANSPARENT)
 
         super.onCreateOptionsMenu(menu, inflater)
     }

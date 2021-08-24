@@ -34,6 +34,10 @@
 
     <style name="CustomTitleExpanded" parent="TextAppearance.Design.CollapsingToolbar.Expanded">
         <item name="android:fontFamily">@font/anton_regular</item>
+        <item name="android:shadowColor">@color/black</item>
+        <item name="android:shadowDx">3</item>
+        <item name="android:shadowDy">3</item>
+        <item name="android:shadowRadius">4</item>
     </style>
 
 </resources>

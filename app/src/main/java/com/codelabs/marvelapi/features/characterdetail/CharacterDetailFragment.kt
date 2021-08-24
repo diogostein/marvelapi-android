@@ -34,8 +34,6 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
         super.onCreate(savedInstanceState)
 
         characterId = arguments?.getInt(ARG_CHARACTER_ID)
-
-        println(characterId)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -43,14 +41,18 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
 
         _binding = CharacterDetailFragmentBinding.bind(view)
 
-        viewModel.state.observe(viewLifecycleOwner, { state ->
+        binding.contentStateView.setOnRetryClickListener {
+            viewModel.getCharacter(characterId!!)
+        }
+
+        viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
-                is ResultState.Loading -> {}
-                is ResultState.Error -> {}
+                is ResultState.Loading -> binding.contentStateView.showProgressIndicator()
+                is ResultState.Error -> binding.contentStateView.showError(state.message)
                 is ResultState.Completed<*> ->
                     onCompleted((state as ResultState.Completed<Character>).value)
             }
-        })
+        }
 
         viewModel.getCharacter(characterId!!)
     }
@@ -62,5 +64,7 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
 
     private fun onCompleted(character: Character) {
         (activity as CharacterDetailActivity).fillAppBar(character)
+
+        binding.contentStateView.showContent()
     }
 }
