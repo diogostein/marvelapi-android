@@ -3,16 +3,20 @@ package com.codelabs.marvelapi.features.characters.data
 import arrow.core.Either
 import com.codelabs.marvelapi.core.errors.Failure
 import com.codelabs.marvelapi.core.mappers.CharacterMapper
+import com.codelabs.marvelapi.core.mappers.ComicMapper
 import com.codelabs.marvelapi.core.models.Character
+import com.codelabs.marvelapi.core.models.Comic
 
 interface CharacterRepository {
     suspend fun getCharacters(limit: Int, offset: Int, query: String?): Either<Failure, List<Character>>
     suspend fun getCharacter(id: Int): Either<Failure, Character>
+    suspend fun getCharacterComics(characterId: Int, limit: Int, offset: Int): Either<Failure, List<Comic>>
 }
 
 class CharacterRepositoryImpl(
     private val remoteDataSource: CharacterRemoteDataSource,
     private val characterMapper: CharacterMapper,
+    private val comicMapper: ComicMapper,
 ) : CharacterRepository {
 
     override suspend fun getCharacters(limit: Int, offset: Int, query: String?): Either<Failure, List<Character>> {
@@ -30,6 +34,15 @@ class CharacterRepositoryImpl(
         return result.fold(
             { Either.Left(it) },
             { Either.Right(characterMapper.map(it.data.results.first())) }
+        )
+    }
+
+    override suspend fun getCharacterComics(characterId: Int, limit: Int, offset: Int): Either<Failure, List<Comic>> {
+        val result = remoteDataSource.getCharacterComics(characterId, limit, offset)
+
+        return result.fold(
+            { Either.Left(it) },
+            { Either.Right(comicMapper.map(it.data.results)) }
         )
     }
 }

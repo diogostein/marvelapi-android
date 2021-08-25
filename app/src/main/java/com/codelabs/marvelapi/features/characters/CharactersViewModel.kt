@@ -14,9 +14,9 @@ class CharactersViewModel @Inject constructor(
     private val repository: CharacterRepository,
 ) : ViewModel() {
     private val _state = MutableLiveData<ResultState<Pagination<Character>>>()
-    private val _pagination = Pagination<Character>(40)
-
     val state: LiveData<ResultState<Pagination<Character>>> = _state
+
+    private val _pagination = Pagination<Character>(40)
 
     fun getCharacters(reload: Boolean = false, query: String? = null) {
         if (reload) _pagination.reset()

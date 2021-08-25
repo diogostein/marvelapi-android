@@ -1,7 +1,7 @@
-package com.codelabs.marvelapi.features.characters.di
+package com.codelabs.marvelapi.features.characterdetail.di
 
-import com.codelabs.marvelapi.core.models.Character
-import com.codelabs.marvelapi.features.characters.CharactersPagingAdapter
+import com.codelabs.marvelapi.core.models.Comic
+import com.codelabs.marvelapi.features.characterdetail.adapters.ComicsPagingAdapter
 import com.codelabs.marvelapi.shared.pagination.PaginationController
 import com.codelabs.marvelapi.shared.pagination.PaginationScrollHandler
 import dagger.Module
@@ -12,19 +12,19 @@ import dagger.hilt.android.scopes.FragmentScoped
 
 @Module
 @InstallIn(FragmentComponent::class)
-object CharacterFragmentModule {
+object CharacterDetailFragmentModule {
 
     @FragmentScoped
     @Provides
-    fun provideCharactersPagingAdapter() = CharactersPagingAdapter()
+    fun provideComicsPagingAdapter() = ComicsPagingAdapter()
 
     @FragmentScoped
     @Provides
     fun providePaginationController(
-        charactersPagingAdapter: CharactersPagingAdapter,
+        comicsPagingAdapter: ComicsPagingAdapter,
         paginationScrollHandler: PaginationScrollHandler,
-    ): PaginationController<Character, CharactersPagingAdapter.CharacterViewHolder> {
-        return PaginationController(charactersPagingAdapter, paginationScrollHandler)
+    ): PaginationController<Comic, ComicsPagingAdapter.ComicViewHolder> {
+        return PaginationController(comicsPagingAdapter, paginationScrollHandler)
     }
 
 }

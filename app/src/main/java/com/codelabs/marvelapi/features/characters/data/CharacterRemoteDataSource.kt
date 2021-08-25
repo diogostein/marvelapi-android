@@ -3,21 +3,26 @@ package com.codelabs.marvelapi.features.characters.data
 import arrow.core.Either
 import com.codelabs.marvelapi.core.api.MarvelApiErrorParser
 import com.codelabs.marvelapi.core.api.MarvelApiService
-import com.codelabs.marvelapi.core.api.responses.BaseResponse
+import com.codelabs.marvelapi.core.api.responses.DataWrapperResponse
 import com.codelabs.marvelapi.core.api.responses.CharacterResponse
+import com.codelabs.marvelapi.core.api.responses.ComicResponse
 import com.codelabs.marvelapi.core.errors.Failure
 import retrofit2.HttpException
 
 interface CharacterRemoteDataSource {
-    suspend fun getCharacters(limit: Int, offset: Int, query: String?): Either<Failure, BaseResponse<CharacterResponse>>
-    suspend fun getCharacter(id: Int): Either<Failure, BaseResponse<CharacterResponse>>
+    suspend fun getCharacters(limit: Int, offset: Int, query: String?):
+            Either<Failure, DataWrapperResponse<CharacterResponse>>
+    suspend fun getCharacter(id: Int):
+            Either<Failure, DataWrapperResponse<CharacterResponse>>
+    suspend fun getCharacterComics(characterId: Int, limit: Int, offset: Int):
+            Either<Failure, DataWrapperResponse<ComicResponse>>
 }
 
 class CharacterRemoteDataSourceImpl(
     private val apiService: MarvelApiService,
 ) : CharacterRemoteDataSource {
 
-    override suspend fun getCharacters(limit: Int, offset: Int, query: String?): Either<Failure, BaseResponse<CharacterResponse>> {
+    override suspend fun getCharacters(limit: Int, offset: Int, query: String?): Either<Failure, DataWrapperResponse<CharacterResponse>> {
         return try {
             val response = apiService.getCharacters(limit, offset, query)
 
@@ -29,9 +34,22 @@ class CharacterRemoteDataSourceImpl(
         }
     }
 
-    override suspend fun getCharacter(id: Int): Either<Failure, BaseResponse<CharacterResponse>> {
+    override suspend fun getCharacter(id: Int): Either<Failure, DataWrapperResponse<CharacterResponse>> {
         return try {
             val response = apiService.getCharacter(id)
+
+            Either.Right(response)
+        } catch (e: HttpException) {
+            Either.Left(MarvelApiErrorParser.parse(e.response()!!).getFailure())
+        } catch (e: Exception) {
+            Either.Left(Failure.Server(e.message))
+        }
+    }
+
+    override suspend fun getCharacterComics(characterId: Int, limit: Int, offset: Int):
+            Either<Failure, DataWrapperResponse<ComicResponse>> {
+        return try {
+            val response = apiService.getCharacterComics(characterId, limit, offset)
 
             Either.Right(response)
         } catch (e: HttpException) {

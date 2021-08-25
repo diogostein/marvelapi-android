@@ -15,6 +15,10 @@ class ContentStateView constructor(
 ) : FrameLayout(context, attrs) {
     private val binding = ContentStateViewBinding.inflate(LayoutInflater.from(context), this)
 
+    val viewGroupContent get() = binding.viewGroupContent
+    val includeError get() = binding.includeError
+    val includeProgress get() = binding.includeProgress
+
     override fun addView(child: View, index: Int, params: ViewGroup.LayoutParams) {
         when (child.id) {
             R.id.includeProgress,

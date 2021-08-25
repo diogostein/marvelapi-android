@@ -1,7 +1,8 @@
 package com.codelabs.marvelapi.core.api
 
 import com.codelabs.marvelapi.core.api.responses.CharacterResponse
-import com.codelabs.marvelapi.core.api.responses.BaseResponse
+import com.codelabs.marvelapi.core.api.responses.ComicResponse
+import com.codelabs.marvelapi.core.api.responses.DataWrapperResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -12,8 +13,15 @@ interface MarvelApiService {
         @Query("limit") limit: Int,
         @Query("offset") offset: Int,
         @Query("nameStartsWith") query: String?
-    ): BaseResponse<CharacterResponse>
+    ): DataWrapperResponse<CharacterResponse>
 
     @GET("v1/public/characters/{id}")
-    suspend fun getCharacter(@Path("id") id: Int): BaseResponse<CharacterResponse>
+    suspend fun getCharacter(@Path("id") id: Int): DataWrapperResponse<CharacterResponse>
+
+    @GET("v1/public/characters/{character-id}/comics")
+    suspend fun getCharacterComics(
+        @Path("character-id") characterId: Int,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int,
+    ): DataWrapperResponse<ComicResponse>
 }

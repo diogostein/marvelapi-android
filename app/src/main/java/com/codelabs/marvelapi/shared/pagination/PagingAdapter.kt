@@ -3,12 +3,11 @@ package com.codelabs.marvelapi.shared.pagination
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.appcompat.widget.AppCompatButton
 import androidx.recyclerview.widget.RecyclerView
 import com.codelabs.marvelapi.R
-import com.codelabs.marvelapi.core.models.Character
 import com.codelabs.marvelapi.databinding.ItemPagingErrorBinding
+import com.codelabs.marvelapi.databinding.ItemPagingFinishedBinding
+import com.codelabs.marvelapi.databinding.ItemPagingLoadingBinding
 
 abstract class PagingAdapter<T, VH : PagingAdapter.BinderViewHolder<T>>
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -37,8 +36,18 @@ abstract class PagingAdapter<T, VH : PagingAdapter.BinderViewHolder<T>>
 
         when (holder.itemViewType) {
             PagingDataHolder.ITEM  -> onBindItemViewHolder(holder as VH, position)
-            PagingDataHolder.ERROR -> (holder as ErrorViewHolder).bind((item as PagingDataHolder.Error))
+            PagingDataHolder.LOADING -> onBindLoadingViewHolder(holder as LoadingViewHolder, position)
+            PagingDataHolder.ERROR -> onBindErrorViewHolder(holder as ErrorViewHolder, position)
+            PagingDataHolder.FINISHED -> onBindFinishedViewHolder(holder as FinishedViewHolder, position)
         }
+    }
+
+    open fun onBindLoadingViewHolder(holder: LoadingViewHolder, position: Int) {}
+
+    open fun onBindFinishedViewHolder(holder: FinishedViewHolder, position: Int) {}
+
+    open fun onBindErrorViewHolder(holder: ErrorViewHolder, position: Int) {
+        holder.bind((items[position] as PagingDataHolder.Error))
     }
 
     override fun getItemCount(): Int = items.size
@@ -124,16 +133,41 @@ abstract class PagingAdapter<T, VH : PagingAdapter.BinderViewHolder<T>>
         open fun setOnItemClickListener(listener: ((value: T) -> Unit)? = null) {}
     }
 
-    private class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val binding = ItemPagingLoadingBinding.bind(itemView)
 
-    private class FinishedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+        fun setHorizontalMode() {
+            binding.root.layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+            )
+        }
+    }
 
-    private class ErrorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class FinishedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val binding = ItemPagingFinishedBinding.bind(itemView)
+
+        fun setHorizontalMode() {
+            binding.root.layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+            )
+        }
+    }
+
+    class ErrorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val binding = ItemPagingErrorBinding.bind(itemView)
 
         fun bind(error: PagingDataHolder.Error) {
             binding.tvMessage.text = error.message
             binding.btnReload.setOnClickListener { error.onRetryClickListener?.invoke() }
+        }
+
+        fun setHorizontalMode() {
+            binding.root.layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+            )
         }
     }
 
