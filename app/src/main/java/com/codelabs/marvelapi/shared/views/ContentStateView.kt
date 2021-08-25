@@ -26,7 +26,7 @@ class ContentStateView constructor(
             R.id.viewGroupContent ->
                 super.addView(child, index, params)
             else ->
-                binding.viewGroupContent.addView(child)
+                binding.viewGroupContent.addView(child, index, params)
         }
     }
 

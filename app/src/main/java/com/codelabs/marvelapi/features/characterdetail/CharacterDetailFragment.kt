@@ -50,18 +50,17 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
 
         _binding = CharacterDetailFragmentBinding.bind(view)
 
-        binding.lsvComics.showProgressIndicator()
-
         paginationController.apply {
-            val onGetCharacterComics = { viewModel.getCharacterComics(characterId!!) }
+            val onGetCharacterComics: (Boolean) -> Unit =
+                { viewModel.getCharacterComics(characterId!!, reload = it) }
 
-            layoutManager = binding.lsvComics.layoutManager
-            setOnRetryClickListener { onGetCharacterComics() }
+            layoutManager = binding.hlvComics.layoutManager
+            setOnRetryClickListener { onGetCharacterComics(false) }
 
-            binding.lsvComics.let {
+            binding.hlvComics.let {
                 it.setAdapter(pagingAdapter)
-                it.addOnScrollListener(getOnPagingScrollListener { onGetCharacterComics() })
-                it.setOnRetryClickListener { onGetCharacterComics() }
+                it.addOnScrollListener(getOnPagingScrollListener { onGetCharacterComics(false) })
+                it.setOnRetryClickListener { onGetCharacterComics(true) }
             }
         }
 
@@ -82,12 +81,12 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
             paginationController.setIdle()
 
             when (state) {
-                is ResultState.Loading -> binding.lsvComics.showProgressIndicator()
-                is ResultState.Error -> binding.lsvComics.showError(state.message)
+                is ResultState.Loading -> binding.hlvComics.showProgressIndicator()
+                is ResultState.Error -> binding.hlvComics.showError(state.message)
                 is ResultState.PaginationLoading -> paginationController.setLoading()
                 is ResultState.PaginationError -> paginationController.setError(state.message)
                 is ResultState.PaginationFinished -> {
-                    binding.lsvComics.showRecyclerView()
+                    binding.hlvComics.showRecyclerView()
                     paginationController.setFinished()
                 }
                 is ResultState.Completed<*> ->
@@ -106,14 +105,22 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
     private fun onCompleted(character: Character) {
         (activity as CharacterDetailActivity).fillAppBar(character)
 
+        binding.tvDescription.apply {
+            if (character.description.isNotBlank()) {
+                text = character.description
+            } else {
+                visibility = View.GONE
+            }
+        }
+
         binding.contentStateView.showContent()
 
-        viewModel.getCharacterComics(character.id)
+        viewModel.getCharacterComics(character.id, reload = true)
     }
 
     private fun onComicsCompleted(pagination: Pagination<Comic>) {
         paginationController.setCompleted(pagination) {
-            binding.lsvComics.showRecyclerView()
+            binding.hlvComics.showRecyclerView()
         }
     }
 }

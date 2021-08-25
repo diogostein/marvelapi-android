@@ -22,7 +22,7 @@
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:statusBarScrim="?attr/colorPrimary"
-            app:expandedTitleMargin="32dp"
+            app:expandedTitleMargin="@dimen/spacing"
             app:collapsedTitleTextAppearance="@style/CustomTitleCollapsed"
             app:expandedTitleTextAppearance="@style/CustomTitleExpanded"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">

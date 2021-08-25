@@ -15,8 +15,11 @@ class HorizontalListView constructor(
     private val binding = HorizontalListViewBinding.inflate(LayoutInflater.from(context), this)
 
     init {
-        binding.recyclerView.layoutManager = LinearLayoutManager(
-            context, LinearLayoutManager.HORIZONTAL, false)
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(
+                context, LinearLayoutManager.HORIZONTAL, false)
+            isNestedScrollingEnabled = false
+        }
     }
 
     val layoutManager get() = binding.recyclerView.layoutManager as LinearLayoutManager

@@ -20,7 +20,7 @@ class CharacterDetailViewModel @Inject constructor(
     private val _characterComicsState = MutableLiveData<ResultState<Pagination<Comic>>>()
     val characterComicsState: LiveData<ResultState<Pagination<Comic>>> = _characterComicsState
 
-    private val _comicsPagination = Pagination<Comic>(40)
+    private val _comicsPagination = Pagination<Comic>(20)
 
     fun getCharacter(id: Int) {
         viewModelScope.launch {
@@ -36,21 +36,6 @@ class CharacterDetailViewModel @Inject constructor(
             )
         }
     }
-
-//    fun getCharacterComics(characterId: Int) {
-//        viewModelScope.launch {
-//            _characterComicsState.postValue(ResultState.Loading)
-//
-//            val result = repository.getCharacterComics(characterId, limit = 20, offset = 0)
-//
-//            _characterComicsState.postValue(
-//                result.fold(
-//                    { ResultState.Error(it.message) },
-//                    { ResultState.Completed(it) }
-//                )
-//            )
-//        }
-//    }
 
     fun getCharacterComics(characterId: Int, reload: Boolean = false) {
         if (reload) _comicsPagination.reset()

@@ -8,6 +8,7 @@ object CharacterMapper : Mapper<CharacterResponse, Character>() {
         return Character(
             id = input.id,
             name = input.name,
+            description = input.description,
             thumbnail = ImageMapper.map(input.thumbnail),
         )
     }
