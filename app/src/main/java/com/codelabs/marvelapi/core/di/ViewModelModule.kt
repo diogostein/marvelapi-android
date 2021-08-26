@@ -2,6 +2,7 @@ package com.codelabs.marvelapi.core.di
 
 import com.codelabs.marvelapi.core.mappers.CharacterMapper
 import com.codelabs.marvelapi.core.mappers.ComicMapper
+import com.codelabs.marvelapi.core.mappers.EventMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,5 +20,9 @@ object ViewModelModule {
     @ViewModelScoped
     @Provides
     fun provideComicMapper() = ComicMapper
+
+    @ViewModelScoped
+    @Provides
+    fun provideEventMapper() = EventMapper
 
 }

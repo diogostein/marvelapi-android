@@ -27,7 +27,20 @@
         <com.codelabs.marvelapi.shared.views.HorizontalListView
             android:id="@+id/hlvComics"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing" />
+
+        <com.codelabs.marvelapi.shared.views.MarvelTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing"
+            android:text="@string/events" />
+
+        <com.codelabs.marvelapi.shared.views.HorizontalListView
+            android:id="@+id/hlvEvents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing" />
 
     </com.codelabs.marvelapi.shared.views.ContentStateView>
 

@@ -4,13 +4,14 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.codelabs.marvelapi.R
 import com.codelabs.marvelapi.core.ResultState
 import com.codelabs.marvelapi.core.models.Character
 import com.codelabs.marvelapi.core.models.Comic
+import com.codelabs.marvelapi.core.models.Event
 import com.codelabs.marvelapi.databinding.CharacterDetailFragmentBinding
 import com.codelabs.marvelapi.features.characterdetail.adapters.ComicsPagingAdapter
+import com.codelabs.marvelapi.features.characterdetail.adapters.EventsPagingAdapter
 import com.codelabs.marvelapi.shared.pagination.Pagination
 import com.codelabs.marvelapi.shared.pagination.PaginationController
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,7 +26,10 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
     private val binding get() = _binding!!
 
     @Inject
-    lateinit var paginationController: PaginationController<Comic, ComicsPagingAdapter.ComicViewHolder>
+    lateinit var comicsPaginationController: PaginationController<Comic, ComicsPagingAdapter.ComicViewHolder>
+
+    @Inject
+    lateinit var eventsPaginationController: PaginationController<Event, EventsPagingAdapter.EventViewHolder>
 
     companion object {
         private const val ARG_CHARACTER_ID = "ARG_CHARACTER_ID"
@@ -50,7 +54,35 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
 
         _binding = CharacterDetailFragmentBinding.bind(view)
 
-        paginationController.apply {
+        setupCharacter()
+        setupComics()
+        setupEvents()
+
+        viewModel.getCharacter(characterId!!)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun setupCharacter() {
+        binding.contentStateView.setOnRetryClickListener {
+            viewModel.getCharacter(characterId!!)
+        }
+
+        viewModel.characterState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is ResultState.Loading -> binding.contentStateView.showProgressIndicator()
+                is ResultState.Error -> binding.contentStateView.showError(state.message)
+                is ResultState.Completed<*> ->
+                    onCompleted((state as ResultState.Completed<Character>).value)
+            }
+        }
+    }
+
+    private fun setupComics() {
+        comicsPaginationController.apply {
             val onGetCharacterComics: (Boolean) -> Unit =
                 { viewModel.getCharacterComics(characterId!!, reload = it) }
 
@@ -64,42 +96,63 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
             }
         }
 
-        binding.contentStateView.setOnRetryClickListener {
-            viewModel.getCharacter(characterId!!)
-        }
-
-        viewModel.characterState.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is ResultState.Loading -> binding.contentStateView.showProgressIndicator()
-                is ResultState.Error -> binding.contentStateView.showError(state.message)
-                is ResultState.Completed<*> ->
-                    onCompleted((state as ResultState.Completed<Character>).value)
-            }
-        }
-
         viewModel.characterComicsState.observe(viewLifecycleOwner) { state ->
-            paginationController.setIdle()
+            comicsPaginationController.setIdle()
 
             when (state) {
                 is ResultState.Loading -> binding.hlvComics.showProgressIndicator()
                 is ResultState.Error -> binding.hlvComics.showError(state.message)
-                is ResultState.PaginationLoading -> paginationController.setLoading()
-                is ResultState.PaginationError -> paginationController.setError(state.message)
+                is ResultState.PaginationLoading -> comicsPaginationController.setLoading()
+                is ResultState.PaginationError -> comicsPaginationController.setError(state.message)
                 is ResultState.PaginationFinished -> {
                     binding.hlvComics.showRecyclerView()
-                    paginationController.setFinished()
+                    comicsPaginationController.setFinished()
                 }
-                is ResultState.Completed<*> ->
-                    onComicsCompleted((state as ResultState.Completed<Pagination<Comic>>).value)
+                is ResultState.Completed<*> -> {
+                    comicsPaginationController.setCompleted(
+                        (state as ResultState.Completed<Pagination<Comic>>).value) {
+                        binding.hlvComics.showRecyclerView()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setupEvents() {
+        eventsPaginationController.apply {
+            val onGetCharacterEvents: (Boolean) -> Unit =
+                { viewModel.getCharacterEvents(characterId!!, reload = it) }
+
+            layoutManager = binding.hlvEvents.layoutManager
+            setOnRetryClickListener { onGetCharacterEvents(false) }
+
+            binding.hlvEvents.let {
+                it.setAdapter(pagingAdapter)
+                it.addOnScrollListener(getOnPagingScrollListener { onGetCharacterEvents(false) })
+                it.setOnRetryClickListener { onGetCharacterEvents(true) }
             }
         }
 
-        viewModel.getCharacter(characterId!!)
-    }
+        viewModel.characterEventsState.observe(viewLifecycleOwner) { state ->
+            eventsPaginationController.setIdle()
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+            when (state) {
+                is ResultState.Loading -> binding.hlvEvents.showProgressIndicator()
+                is ResultState.Error -> binding.hlvEvents.showError(state.message)
+                is ResultState.PaginationLoading -> eventsPaginationController.setLoading()
+                is ResultState.PaginationError -> eventsPaginationController.setError(state.message)
+                is ResultState.PaginationFinished -> {
+                    binding.hlvEvents.showRecyclerView()
+                    eventsPaginationController.setFinished()
+                }
+                is ResultState.Completed<*> -> {
+                    eventsPaginationController.setCompleted(
+                        (state as ResultState.Completed<Pagination<Event>>).value) {
+                        binding.hlvEvents.showRecyclerView()
+                    }
+                }
+            }
+        }
     }
 
     private fun onCompleted(character: Character) {
@@ -116,11 +169,6 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
         binding.contentStateView.showContent()
 
         viewModel.getCharacterComics(character.id, reload = true)
-    }
-
-    private fun onComicsCompleted(pagination: Pagination<Comic>) {
-        paginationController.setCompleted(pagination) {
-            binding.hlvComics.showRecyclerView()
-        }
+        viewModel.getCharacterEvents(character.id, reload = true)
     }
 }

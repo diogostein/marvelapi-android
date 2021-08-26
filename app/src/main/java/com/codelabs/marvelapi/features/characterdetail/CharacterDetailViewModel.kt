@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.codelabs.marvelapi.core.ResultState
 import com.codelabs.marvelapi.core.models.Character
 import com.codelabs.marvelapi.core.models.Comic
+import com.codelabs.marvelapi.core.models.Event
 import com.codelabs.marvelapi.features.characters.data.CharacterRepository
 import com.codelabs.marvelapi.shared.pagination.Pagination
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,8 +20,11 @@ class CharacterDetailViewModel @Inject constructor(
 
     private val _characterComicsState = MutableLiveData<ResultState<Pagination<Comic>>>()
     val characterComicsState: LiveData<ResultState<Pagination<Comic>>> = _characterComicsState
-
     private val _comicsPagination = Pagination<Comic>(20)
+
+    private val _characterEventsState = MutableLiveData<ResultState<Pagination<Event>>>()
+    val characterEventsState: LiveData<ResultState<Pagination<Event>>> = _characterEventsState
+    private val _eventsPagination = Pagination<Event>(20)
 
     fun getCharacter(id: Int) {
         viewModelScope.launch {
@@ -57,6 +61,32 @@ class CharacterDetailViewModel @Inject constructor(
                     {
                         if (_comicsPagination.refresh(it).hasReachedEndOfResults) ResultState.PaginationFinished
                         else ResultState.Completed(_comicsPagination)
+                    }
+                )
+            )
+        }
+    }
+
+    fun getCharacterEvents(characterId: Int, reload: Boolean = false) {
+        if (reload) _eventsPagination.reset()
+
+        viewModelScope.launch {
+            _characterEventsState.postValue(
+                if (!reload) ResultState.PaginationLoading else ResultState.Loading
+            )
+
+            val result = repository.getCharacterEvents(
+                characterId, _eventsPagination.pageSize, _eventsPagination.offset)
+
+            _characterEventsState.postValue(
+                result.fold(
+                    {
+                        if (!reload) ResultState.PaginationError(it.message)
+                        else ResultState.Error(it.message)
+                    },
+                    {
+                        if (_eventsPagination.refresh(it).hasReachedEndOfResults) ResultState.PaginationFinished
+                        else ResultState.Completed(_eventsPagination)
                     }
                 )
             )

@@ -6,6 +6,7 @@ import com.codelabs.marvelapi.core.api.MarvelApiService
 import com.codelabs.marvelapi.core.api.responses.DataWrapperResponse
 import com.codelabs.marvelapi.core.api.responses.CharacterResponse
 import com.codelabs.marvelapi.core.api.responses.ComicResponse
+import com.codelabs.marvelapi.core.api.responses.EventResponse
 import com.codelabs.marvelapi.core.errors.Failure
 import retrofit2.HttpException
 
@@ -16,6 +17,8 @@ interface CharacterRemoteDataSource {
             Either<Failure, DataWrapperResponse<CharacterResponse>>
     suspend fun getCharacterComics(characterId: Int, limit: Int, offset: Int):
             Either<Failure, DataWrapperResponse<ComicResponse>>
+    suspend fun getCharacterEvents(characterId: Int, limit: Int, offset: Int):
+            Either<Failure, DataWrapperResponse<EventResponse>>
 }
 
 class CharacterRemoteDataSourceImpl(
@@ -50,6 +53,19 @@ class CharacterRemoteDataSourceImpl(
             Either<Failure, DataWrapperResponse<ComicResponse>> {
         return try {
             val response = apiService.getCharacterComics(characterId, limit, offset)
+
+            Either.Right(response)
+        } catch (e: HttpException) {
+            Either.Left(MarvelApiErrorParser.parse(e.response()!!).getFailure())
+        } catch (e: Exception) {
+            Either.Left(Failure.Server(e.message))
+        }
+    }
+
+    override suspend fun getCharacterEvents(characterId: Int, limit: Int, offset: Int):
+            Either<Failure, DataWrapperResponse<EventResponse>> {
+        return try {
+            val response = apiService.getCharacterEvents(characterId, limit, offset)
 
             Either.Right(response)
         } catch (e: HttpException) {
