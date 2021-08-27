@@ -42,6 +42,18 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/spacing" />
 
+        <com.codelabs.marvelapi.shared.views.MarvelTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing"
+            android:text="@string/series" />
+
+        <com.codelabs.marvelapi.shared.views.HorizontalListView
+            android:id="@+id/hlvSeries"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing" />
+
     </com.codelabs.marvelapi.shared.views.ContentStateView>
 
 </LinearLayout>

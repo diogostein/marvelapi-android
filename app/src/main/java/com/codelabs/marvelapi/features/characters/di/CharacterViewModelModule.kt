@@ -1,9 +1,7 @@
 package com.codelabs.marvelapi.features.characters.di
 
 import com.codelabs.marvelapi.core.api.MarvelApiService
-import com.codelabs.marvelapi.core.mappers.CharacterMapper
-import com.codelabs.marvelapi.core.mappers.ComicMapper
-import com.codelabs.marvelapi.core.mappers.EventMapper
+import com.codelabs.marvelapi.core.mappers.*
 import com.codelabs.marvelapi.features.characters.data.CharacterRemoteDataSource
 import com.codelabs.marvelapi.features.characters.data.CharacterRemoteDataSourceImpl
 import com.codelabs.marvelapi.features.characters.data.CharacterRepository
@@ -31,8 +29,17 @@ object CharacterViewModelModule {
         characterMapper: CharacterMapper,
         comicMapper: ComicMapper,
         eventMapper: EventMapper,
+        serieMapper: SerieMapper,
+        storyMapper: StoryMapper,
     ): CharacterRepository {
-        return CharacterRepositoryImpl(characterRemoteDataSource, characterMapper, comicMapper, eventMapper)
+        return CharacterRepositoryImpl(
+            characterRemoteDataSource,
+            characterMapper,
+            comicMapper,
+            eventMapper,
+            serieMapper,
+            storyMapper
+        )
     }
 
 }

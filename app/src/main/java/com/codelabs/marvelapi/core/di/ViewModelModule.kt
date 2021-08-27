@@ -1,8 +1,6 @@
 package com.codelabs.marvelapi.core.di
 
-import com.codelabs.marvelapi.core.mappers.CharacterMapper
-import com.codelabs.marvelapi.core.mappers.ComicMapper
-import com.codelabs.marvelapi.core.mappers.EventMapper
+import com.codelabs.marvelapi.core.mappers.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,5 +22,13 @@ object ViewModelModule {
     @ViewModelScoped
     @Provides
     fun provideEventMapper() = EventMapper
+
+    @ViewModelScoped
+    @Provides
+    fun provideSerieMapper() = SerieMapper
+
+    @ViewModelScoped
+    @Provides
+    fun provideStoryMapper() = StoryMapper
 
 }

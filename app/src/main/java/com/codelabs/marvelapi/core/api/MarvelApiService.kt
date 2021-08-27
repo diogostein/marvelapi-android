@@ -1,9 +1,6 @@
 package com.codelabs.marvelapi.core.api
 
-import com.codelabs.marvelapi.core.api.responses.CharacterResponse
-import com.codelabs.marvelapi.core.api.responses.ComicResponse
-import com.codelabs.marvelapi.core.api.responses.DataWrapperResponse
-import com.codelabs.marvelapi.core.api.responses.EventResponse
+import com.codelabs.marvelapi.core.api.responses.*
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -32,4 +29,18 @@ interface MarvelApiService {
         @Query("limit") limit: Int,
         @Query("offset") offset: Int,
     ): DataWrapperResponse<EventResponse>
+
+    @GET("v1/public/characters/{character-id}/series")
+    suspend fun getCharacterSeries(
+        @Path("character-id") characterId: Int,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int,
+    ): DataWrapperResponse<SerieResponse>
+
+    @GET("v1/public/characters/{character-id}/stories")
+    suspend fun getCharacterStories(
+        @Path("character-id") characterId: Int,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int,
+    ): DataWrapperResponse<StoryResponse>
 }

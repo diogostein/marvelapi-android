@@ -3,6 +3,8 @@
 
     <string name="reload">Recarregar</string>
     <string name="find_your_hero">Encontre seu herói</string>
-    <string name="comics">Comics</string>
+    <string name="comics">Quadrinhos</string>
     <string name="events">Eventos</string>
+    <string name="series">Series</string>
+    <string name="stories">Estorias</string>
 </resources>

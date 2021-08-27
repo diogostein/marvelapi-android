@@ -1,10 +1,10 @@
 package com.codelabs.marvelapi.features.characterdetail
 
 import androidx.lifecycle.*
+import arrow.core.Either
 import com.codelabs.marvelapi.core.ResultState
-import com.codelabs.marvelapi.core.models.Character
-import com.codelabs.marvelapi.core.models.Comic
-import com.codelabs.marvelapi.core.models.Event
+import com.codelabs.marvelapi.core.errors.Failure
+import com.codelabs.marvelapi.core.models.*
 import com.codelabs.marvelapi.features.characters.data.CharacterRepository
 import com.codelabs.marvelapi.shared.pagination.Pagination
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,11 +20,15 @@ class CharacterDetailViewModel @Inject constructor(
 
     private val _characterComicsState = MutableLiveData<ResultState<Pagination<Comic>>>()
     val characterComicsState: LiveData<ResultState<Pagination<Comic>>> = _characterComicsState
-    private val _comicsPagination = Pagination<Comic>(20)
+    private val _comicsPagination = Pagination<Comic>(15)
 
     private val _characterEventsState = MutableLiveData<ResultState<Pagination<Event>>>()
     val characterEventsState: LiveData<ResultState<Pagination<Event>>> = _characterEventsState
-    private val _eventsPagination = Pagination<Event>(20)
+    private val _eventsPagination = Pagination<Event>(15)
+
+    private val _characterSeriesState = MutableLiveData<ResultState<Pagination<Serie>>>()
+    val characterSeriesState: LiveData<ResultState<Pagination<Serie>>> = _characterSeriesState
+    private val _seriesPagination = Pagination<Serie>(15)
 
     fun getCharacter(id: Int) {
         viewModelScope.launch {
@@ -42,51 +46,47 @@ class CharacterDetailViewModel @Inject constructor(
     }
 
     fun getCharacterComics(characterId: Int, reload: Boolean = false) {
-        if (reload) _comicsPagination.reset()
-
-        viewModelScope.launch {
-            _characterComicsState.postValue(
-                if (!reload) ResultState.PaginationLoading else ResultState.Loading
-            )
-
-            val result = repository.getCharacterComics(
-                characterId, _comicsPagination.pageSize, _comicsPagination.offset)
-
-            _characterComicsState.postValue(
-                result.fold(
-                    {
-                        if (!reload) ResultState.PaginationError(it.message)
-                        else ResultState.Error(it.message)
-                    },
-                    {
-                        if (_comicsPagination.refresh(it).hasReachedEndOfResults) ResultState.PaginationFinished
-                        else ResultState.Completed(_comicsPagination)
-                    }
-                )
-            )
+        buildPaginationState(_characterComicsState, _comicsPagination, reload) {
+            repository.getCharacterComics(characterId, _comicsPagination.pageSize, _comicsPagination.offset)
         }
     }
 
     fun getCharacterEvents(characterId: Int, reload: Boolean = false) {
-        if (reload) _eventsPagination.reset()
+        buildPaginationState(_characterEventsState, _eventsPagination, reload) {
+            repository.getCharacterEvents(characterId, _eventsPagination.pageSize, _eventsPagination.offset)
+        }
+    }
+
+    fun getCharacterSeries(characterId: Int, reload: Boolean = false) {
+        buildPaginationState(_characterSeriesState, _seriesPagination, reload) {
+            repository.getCharacterSeries(characterId, _seriesPagination.pageSize, _seriesPagination.offset)
+        }
+    }
+
+    private fun <T>buildPaginationState(
+        state: MutableLiveData<ResultState<Pagination<T>>>,
+        pagination: Pagination<T>,
+        reload: Boolean,
+        onRepositoryResult: suspend () -> Either<Failure, List<T>>
+    ) {
+        if (reload) pagination.reset()
 
         viewModelScope.launch {
-            _characterEventsState.postValue(
+            state.postValue(
                 if (!reload) ResultState.PaginationLoading else ResultState.Loading
             )
 
-            val result = repository.getCharacterEvents(
-                characterId, _eventsPagination.pageSize, _eventsPagination.offset)
+            val result = onRepositoryResult()
 
-            _characterEventsState.postValue(
+            state.postValue(
                 result.fold(
                     {
                         if (!reload) ResultState.PaginationError(it.message)
                         else ResultState.Error(it.message)
                     },
                     {
-                        if (_eventsPagination.refresh(it).hasReachedEndOfResults) ResultState.PaginationFinished
-                        else ResultState.Completed(_eventsPagination)
+                        if (pagination.refresh(it).hasReachedEndOfResults) ResultState.PaginationFinished
+                        else ResultState.Completed(pagination)
                     }
                 )
             )

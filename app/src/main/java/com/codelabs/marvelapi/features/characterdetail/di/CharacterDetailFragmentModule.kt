@@ -2,8 +2,10 @@ package com.codelabs.marvelapi.features.characterdetail.di
 
 import com.codelabs.marvelapi.core.models.Comic
 import com.codelabs.marvelapi.core.models.Event
+import com.codelabs.marvelapi.core.models.Serie
 import com.codelabs.marvelapi.features.characterdetail.adapters.ComicsPagingAdapter
 import com.codelabs.marvelapi.features.characterdetail.adapters.EventsPagingAdapter
+import com.codelabs.marvelapi.features.characterdetail.adapters.SeriesPagingAdapter
 import com.codelabs.marvelapi.shared.pagination.PaginationController
 import com.codelabs.marvelapi.shared.pagination.PaginationScrollHandler
 import dagger.Module
@@ -26,6 +28,10 @@ object CharacterDetailFragmentModule {
 
     @FragmentScoped
     @Provides
+    fun provideSeriesPagingAdapter() = SeriesPagingAdapter()
+
+    @FragmentScoped
+    @Provides
     fun provideComicsPaginationController(
         comicsPagingAdapter: ComicsPagingAdapter,
         paginationScrollHandler: PaginationScrollHandler,
@@ -40,6 +46,15 @@ object CharacterDetailFragmentModule {
         paginationScrollHandler: PaginationScrollHandler,
     ): PaginationController<Event, EventsPagingAdapter.EventViewHolder> {
         return PaginationController(eventsPagingAdapter, paginationScrollHandler)
+    }
+
+    @FragmentScoped
+    @Provides
+    fun provideSeriesPaginationController(
+        seriesPagingAdapter: SeriesPagingAdapter,
+        paginationScrollHandler: PaginationScrollHandler,
+    ): PaginationController<Serie, SeriesPagingAdapter.SerieViewHolder> {
+        return PaginationController(seriesPagingAdapter, paginationScrollHandler)
     }
 
 }
