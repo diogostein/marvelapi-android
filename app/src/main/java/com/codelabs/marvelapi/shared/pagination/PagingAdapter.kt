@@ -32,8 +32,6 @@ abstract class PagingAdapter<T, VH : PagingAdapter.BinderViewHolder<T>>
 
     @Suppress("UNCHECKED_CAST")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val item = items[position]
-
         when (holder.itemViewType) {
             PagingDataHolder.ITEM  -> onBindItemViewHolder(holder as VH, position)
             PagingDataHolder.LOADING -> onBindLoadingViewHolder(holder as LoadingViewHolder, position)
@@ -62,12 +60,13 @@ abstract class PagingAdapter<T, VH : PagingAdapter.BinderViewHolder<T>>
 
     fun submitData(data: Pagination.PagingData<T>) {
         items.addAll(data.list.map { PagingDataHolder.Item(it) })
-        notifyDataSetChanged()
+        notifyItemRangeInserted(itemCount - data.list.size, itemCount)
     }
 
     fun clear() {
+        val count = itemCount
         items.clear()
-        notifyDataSetChanged()
+        notifyItemRangeRemoved(0, count)
     }
 
     fun showLoadingIndicator() {

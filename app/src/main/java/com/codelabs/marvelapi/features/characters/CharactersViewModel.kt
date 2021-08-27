@@ -1,6 +1,7 @@
 package com.codelabs.marvelapi.features.characters
 
 import androidx.lifecycle.*
+import com.codelabs.marvelapi.core.Const
 import com.codelabs.marvelapi.shared.pagination.Pagination
 import com.codelabs.marvelapi.core.ResultState
 import com.codelabs.marvelapi.core.models.Character
@@ -16,7 +17,7 @@ class CharactersViewModel @Inject constructor(
     private val _state = MutableLiveData<ResultState<Pagination<Character>>>()
     val state: LiveData<ResultState<Pagination<Character>>> = _state
 
-    private val _pagination = Pagination<Character>(40)
+    private val _pagination = Pagination<Character>(Const.GridViewPaging.PAGE_SIZE)
 
     fun getCharacters(reload: Boolean = false, query: String? = null) {
         if (reload) _pagination.reset()

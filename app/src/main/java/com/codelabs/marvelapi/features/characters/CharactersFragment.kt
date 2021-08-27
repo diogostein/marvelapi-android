@@ -11,6 +11,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.codelabs.marvelapi.R
+import com.codelabs.marvelapi.core.Const
 import com.codelabs.marvelapi.shared.pagination.Pagination
 import com.codelabs.marvelapi.core.ResultState
 import com.codelabs.marvelapi.core.models.Character
@@ -49,7 +50,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
         _binding = CharactersFragmentBinding.bind(view)
 
         paginationController.apply {
-            layoutManager = GridLayoutManager(context, 3)
+            layoutManager = GridLayoutManager(context, Const.GridViewPaging.SPAN_COUNT)
             setOnRetryClickListener { viewModel.getCharacters(query = querySearch) }
             setOnItemClickListener {
                 startActivity(Intent(context, CharacterDetailActivity::class.java).apply {

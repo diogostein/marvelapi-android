@@ -56,9 +56,10 @@ class PaginationController<T, VH : PagingAdapter.BinderViewHolder<T>>(
 
     fun setError(message: String) = pagingAdapter.showError(message)
 
-    fun setFinished() {
+    fun setFinished(onPostFinished: (() -> Unit)? = null) {
         setScrollState(PaginationScrollHandler.State.Finished)
         pagingAdapter.showFinished()
+        onPostFinished?.invoke()
     }
 
     fun setCompleted(pagination: Pagination<T>, onAdapterRefreshed: () -> Unit) {

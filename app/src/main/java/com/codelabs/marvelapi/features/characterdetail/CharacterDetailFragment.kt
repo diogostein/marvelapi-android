@@ -129,8 +129,9 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
                 is ResultState.PaginationLoading -> comicsPaginationController.setLoading()
                 is ResultState.PaginationError -> comicsPaginationController.setError(state.message)
                 is ResultState.PaginationFinished -> {
-                    binding.hlvComics.showRecyclerView()
-                    comicsPaginationController.setFinished()
+                    comicsPaginationController.setFinished {
+                        binding.hlvComics.showRecyclerView()
+                    }
                 }
                 is ResultState.Completed<*> -> {
                     comicsPaginationController.setCompleted(
@@ -166,8 +167,9 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
                 is ResultState.PaginationLoading -> eventsPaginationController.setLoading()
                 is ResultState.PaginationError -> eventsPaginationController.setError(state.message)
                 is ResultState.PaginationFinished -> {
-                    binding.hlvEvents.showRecyclerView()
-                    eventsPaginationController.setFinished()
+                    eventsPaginationController.setFinished {
+                        binding.hlvEvents.showRecyclerView()
+                    }
                 }
                 is ResultState.Completed<*> -> {
                     eventsPaginationController.setCompleted(
@@ -203,8 +205,9 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
                 is ResultState.PaginationLoading -> seriesPaginationController.setLoading()
                 is ResultState.PaginationError -> seriesPaginationController.setError(state.message)
                 is ResultState.PaginationFinished -> {
-                    binding.hlvSeries.showRecyclerView()
-                    seriesPaginationController.setFinished()
+                    seriesPaginationController.setFinished {
+                        binding.hlvSeries.showRecyclerView()
+                    }
                 }
                 is ResultState.Completed<*> -> {
                     seriesPaginationController.setCompleted(

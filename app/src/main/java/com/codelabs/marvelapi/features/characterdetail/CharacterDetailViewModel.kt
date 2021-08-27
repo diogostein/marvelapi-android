@@ -2,6 +2,7 @@ package com.codelabs.marvelapi.features.characterdetail
 
 import androidx.lifecycle.*
 import arrow.core.Either
+import com.codelabs.marvelapi.core.Const
 import com.codelabs.marvelapi.core.ResultState
 import com.codelabs.marvelapi.core.errors.Failure
 import com.codelabs.marvelapi.core.models.*
@@ -20,15 +21,15 @@ class CharacterDetailViewModel @Inject constructor(
 
     private val _characterComicsState = MutableLiveData<ResultState<Pagination<Comic>>>()
     val characterComicsState: LiveData<ResultState<Pagination<Comic>>> = _characterComicsState
-    private val _comicsPagination = Pagination<Comic>(15)
+    private val _comicsPagination = Pagination<Comic>(Const.HorizontalListViewPaging.PAGE_SIZE)
 
     private val _characterEventsState = MutableLiveData<ResultState<Pagination<Event>>>()
     val characterEventsState: LiveData<ResultState<Pagination<Event>>> = _characterEventsState
-    private val _eventsPagination = Pagination<Event>(15)
+    private val _eventsPagination = Pagination<Event>(Const.HorizontalListViewPaging.PAGE_SIZE)
 
     private val _characterSeriesState = MutableLiveData<ResultState<Pagination<Serie>>>()
     val characterSeriesState: LiveData<ResultState<Pagination<Serie>>> = _characterSeriesState
-    private val _seriesPagination = Pagination<Serie>(15)
+    private val _seriesPagination = Pagination<Serie>(Const.HorizontalListViewPaging.PAGE_SIZE)
 
     fun getCharacter(id: Int) {
         viewModelScope.launch {
