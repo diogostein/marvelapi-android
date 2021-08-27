@@ -6,8 +6,8 @@ import com.codelabs.marvelapi.core.models.Serie
 import com.codelabs.marvelapi.features.characterdetail.adapters.ComicsPagingAdapter
 import com.codelabs.marvelapi.features.characterdetail.adapters.EventsPagingAdapter
 import com.codelabs.marvelapi.features.characterdetail.adapters.SeriesPagingAdapter
-import com.codelabs.marvelapi.shared.pagination.PaginationController
-import com.codelabs.marvelapi.shared.pagination.PaginationScrollHandler
+import com.codelabs.marvelapi.shared.pagination.PagingController
+import com.codelabs.marvelapi.shared.pagination.PagingScrollHandler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,29 +32,29 @@ object CharacterDetailFragmentModule {
 
     @FragmentScoped
     @Provides
-    fun provideComicsPaginationController(
+    fun provideComicsPagingController(
         comicsPagingAdapter: ComicsPagingAdapter,
-        paginationScrollHandler: PaginationScrollHandler,
-    ): PaginationController<Comic, ComicsPagingAdapter.ComicViewHolder> {
-        return PaginationController(comicsPagingAdapter, paginationScrollHandler)
+        pagingScrollHandler: PagingScrollHandler,
+    ): PagingController<Comic, ComicsPagingAdapter.ComicViewHolder> {
+        return PagingController(comicsPagingAdapter, pagingScrollHandler)
     }
 
     @FragmentScoped
     @Provides
-    fun provideEventsPaginationController(
+    fun provideEventsPagingController(
         eventsPagingAdapter: EventsPagingAdapter,
-        paginationScrollHandler: PaginationScrollHandler,
-    ): PaginationController<Event, EventsPagingAdapter.EventViewHolder> {
-        return PaginationController(eventsPagingAdapter, paginationScrollHandler)
+        pagingScrollHandler: PagingScrollHandler,
+    ): PagingController<Event, EventsPagingAdapter.EventViewHolder> {
+        return PagingController(eventsPagingAdapter, pagingScrollHandler)
     }
 
     @FragmentScoped
     @Provides
-    fun provideSeriesPaginationController(
+    fun provideSeriesPagingController(
         seriesPagingAdapter: SeriesPagingAdapter,
-        paginationScrollHandler: PaginationScrollHandler,
-    ): PaginationController<Serie, SeriesPagingAdapter.SerieViewHolder> {
-        return PaginationController(seriesPagingAdapter, paginationScrollHandler)
+        pagingScrollHandler: PagingScrollHandler,
+    ): PagingController<Serie, SeriesPagingAdapter.SerieViewHolder> {
+        return PagingController(seriesPagingAdapter, pagingScrollHandler)
     }
 
 }

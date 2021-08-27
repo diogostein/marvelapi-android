@@ -3,7 +3,7 @@ package com.codelabs.marvelapi.shared.pagination
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class PaginationScrollHandler {
+class PagingScrollHandler {
     var state: State = State.Idle
 
     companion object {

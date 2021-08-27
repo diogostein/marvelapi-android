@@ -58,7 +58,7 @@ abstract class PagingAdapter<T, VH : PagingAdapter.BinderViewHolder<T>>
         return LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)
     }
 
-    fun submitData(data: Pagination.PagingData<T>) {
+    fun submitData(data: Pager.PagingData<T>) {
         items.addAll(data.list.map { PagingDataHolder.Item(it) })
         notifyItemRangeInserted(itemCount - data.list.size, itemCount)
     }

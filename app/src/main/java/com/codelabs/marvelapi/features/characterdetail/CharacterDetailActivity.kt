@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.codelabs.marvelapi.R
 import com.codelabs.marvelapi.core.models.Character
+import com.codelabs.marvelapi.core.replaceFragment
 import com.codelabs.marvelapi.databinding.CharacterDetailActivityBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -35,15 +36,7 @@ class CharacterDetailActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             val characterId = intent.extras?.getInt(ARG_CHARACTER_ID) ?: 0
-
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.container, CharacterDetailFragment.newInstance(characterId))
-                .commit()
-        }
-
-        binding.collapsingToolbar.setOnClickListener {
-            finish()
+            replaceFragment(CharacterDetailFragment.newInstance(characterId))
         }
     }
 

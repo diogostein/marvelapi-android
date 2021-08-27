@@ -11,7 +11,6 @@ interface CharacterRepository {
     suspend fun getCharacterComics(characterId: Int, limit: Int, offset: Int): Either<Failure, List<Comic>>
     suspend fun getCharacterEvents(characterId: Int, limit: Int, offset: Int): Either<Failure, List<Event>>
     suspend fun getCharacterSeries(characterId: Int, limit: Int, offset: Int): Either<Failure, List<Serie>>
-    suspend fun getCharacterStories(characterId: Int, limit: Int, offset: Int): Either<Failure, List<Story>>
 }
 
 class CharacterRepositoryImpl(
@@ -20,7 +19,6 @@ class CharacterRepositoryImpl(
     private val comicMapper: ComicMapper,
     private val eventMapper: EventMapper,
     private val serieMapper: SerieMapper,
-    private val storyMapper: StoryMapper,
 ) : CharacterRepository {
 
     override suspend fun getCharacters(limit: Int, offset: Int, query: String?): Either<Failure, List<Character>> {
@@ -80,16 +78,4 @@ class CharacterRepositoryImpl(
         )
     }
 
-    override suspend fun getCharacterStories(
-        characterId: Int,
-        limit: Int,
-        offset: Int
-    ): Either<Failure, List<Story>> {
-        val result = remoteDataSource.getCharacterStories(characterId, limit, offset)
-
-        return result.fold(
-            { Either.Left(it) },
-            { Either.Right(storyMapper.map(it.data.results)) }
-        )
-    }
 }

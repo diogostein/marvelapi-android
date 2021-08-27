@@ -2,8 +2,8 @@ package com.codelabs.marvelapi.features.characters.di
 
 import com.codelabs.marvelapi.core.models.Character
 import com.codelabs.marvelapi.features.characters.CharactersPagingAdapter
-import com.codelabs.marvelapi.shared.pagination.PaginationController
-import com.codelabs.marvelapi.shared.pagination.PaginationScrollHandler
+import com.codelabs.marvelapi.shared.pagination.PagingController
+import com.codelabs.marvelapi.shared.pagination.PagingScrollHandler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,11 +20,11 @@ object CharacterFragmentModule {
 
     @FragmentScoped
     @Provides
-    fun providePaginationController(
+    fun provideCharacterPagingController(
         charactersPagingAdapter: CharactersPagingAdapter,
-        paginationScrollHandler: PaginationScrollHandler,
-    ): PaginationController<Character, CharactersPagingAdapter.CharacterViewHolder> {
-        return PaginationController(charactersPagingAdapter, paginationScrollHandler)
+        pagingScrollHandler: PagingScrollHandler,
+    ): PagingController<Character, CharactersPagingAdapter.CharacterViewHolder> {
+        return PagingController(charactersPagingAdapter, pagingScrollHandler)
     }
 
 }

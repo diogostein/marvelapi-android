@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Marvel API</string>
+    <string name="app_name" translatable="false">Marvel API</string>
 
     <string name="reload">Recarregar</string>
     <string name="find_your_hero">Encontre seu herói</string>

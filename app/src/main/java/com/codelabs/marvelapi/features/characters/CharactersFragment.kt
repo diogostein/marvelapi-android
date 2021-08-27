@@ -12,13 +12,13 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.codelabs.marvelapi.R
 import com.codelabs.marvelapi.core.Const
-import com.codelabs.marvelapi.shared.pagination.Pagination
+import com.codelabs.marvelapi.shared.pagination.Pager
 import com.codelabs.marvelapi.core.ResultState
 import com.codelabs.marvelapi.core.models.Character
 import com.codelabs.marvelapi.databinding.CharactersFragmentBinding
 import com.codelabs.marvelapi.features.characterdetail.CharacterDetailActivity
 import com.codelabs.marvelapi.shared.listeners.SearchViewTextListener
-import com.codelabs.marvelapi.shared.pagination.PaginationController
+import com.codelabs.marvelapi.shared.pagination.PagingController
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -29,7 +29,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
     var querySearch: String? = null
 
     @Inject
-    lateinit var paginationController: PaginationController<Character, CharactersPagingAdapter.CharacterViewHolder>
+    lateinit var pagingController: PagingController<Character, CharactersPagingAdapter.CharacterViewHolder>
 
     private var _binding: CharactersFragmentBinding? = null
     private val binding get() = _binding!!
@@ -49,7 +49,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
 
         _binding = CharactersFragmentBinding.bind(view)
 
-        paginationController.apply {
+        pagingController.apply {
             layoutManager = GridLayoutManager(context, Const.GridViewPaging.SPAN_COUNT)
             setOnRetryClickListener { viewModel.getCharacters(query = querySearch) }
             setOnItemClickListener {
@@ -70,16 +70,16 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
         }
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
-            paginationController.setIdle()
+            pagingController.setIdle()
 
             when (state) {
                 is ResultState.Loading -> onLoading()
                 is ResultState.Error -> onError(state.message)
-                is ResultState.PaginationLoading -> paginationController.setLoading()
-                is ResultState.PaginationError -> paginationController.setError(state.message)
+                is ResultState.PaginationLoading -> pagingController.setLoading()
+                is ResultState.PaginationError -> pagingController.setError(state.message)
                 is ResultState.PaginationFinished -> onPaginationFinished()
                 is ResultState.Completed<*> ->
-                    onCompleted((state as ResultState.Completed<Pagination<Character>>).value)
+                    onCompleted((state as ResultState.Completed<Pager<Character>>).value)
             }
         }
 
@@ -113,7 +113,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
     }
 
     private fun reload() {
-        paginationController.pagingAdapter.clear()
+        pagingController.pagingAdapter.clear()
         viewModel.getCharacters(true, querySearch)
     }
 
@@ -123,14 +123,14 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
         binding.resultStateView.showError(message)
     }
 
-    private fun onCompleted(pagination: Pagination<Character>) {
-        paginationController.setCompleted(pagination) {
+    private fun onCompleted(pager: Pager<Character>) {
+        pagingController.setCompleted(pager) {
             binding.resultStateView.showRecyclerView()
         }
     }
 
     private fun onPaginationFinished() {
         binding.resultStateView.showRecyclerView()
-        paginationController.setFinished()
+        pagingController.setFinished()
     }
 }

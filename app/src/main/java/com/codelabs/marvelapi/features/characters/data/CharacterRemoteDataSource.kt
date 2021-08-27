@@ -18,8 +18,6 @@ interface CharacterRemoteDataSource {
             Either<Failure, DataWrapperResponse<EventResponse>>
     suspend fun getCharacterSeries(characterId: Int, limit: Int, offset: Int):
             Either<Failure, DataWrapperResponse<SerieResponse>>
-    suspend fun getCharacterStories(characterId: Int, limit: Int, offset: Int):
-            Either<Failure, DataWrapperResponse<StoryResponse>>
 }
 
 class CharacterRemoteDataSourceImpl(
@@ -80,19 +78,6 @@ class CharacterRemoteDataSourceImpl(
             Either<Failure, DataWrapperResponse<SerieResponse>> {
         return try {
             val response = apiService.getCharacterSeries(characterId, limit, offset)
-
-            Either.Right(response)
-        } catch (e: HttpException) {
-            Either.Left(MarvelApiErrorParser.parse(e.response()!!).getFailure())
-        } catch (e: Exception) {
-            Either.Left(Failure.Server(e.message))
-        }
-    }
-
-    override suspend fun getCharacterStories(characterId: Int, limit: Int, offset: Int):
-            Either<Failure, DataWrapperResponse<StoryResponse>> {
-        return try {
-            val response = apiService.getCharacterStories(characterId, limit, offset)
 
             Either.Right(response)
         } catch (e: HttpException) {

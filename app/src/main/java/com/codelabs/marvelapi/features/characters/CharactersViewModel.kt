@@ -2,7 +2,7 @@ package com.codelabs.marvelapi.features.characters
 
 import androidx.lifecycle.*
 import com.codelabs.marvelapi.core.Const
-import com.codelabs.marvelapi.shared.pagination.Pagination
+import com.codelabs.marvelapi.shared.pagination.Pager
 import com.codelabs.marvelapi.core.ResultState
 import com.codelabs.marvelapi.core.models.Character
 import com.codelabs.marvelapi.features.characters.data.CharacterRepository
@@ -14,10 +14,10 @@ import javax.inject.Inject
 class CharactersViewModel @Inject constructor(
     private val repository: CharacterRepository,
 ) : ViewModel() {
-    private val _state = MutableLiveData<ResultState<Pagination<Character>>>()
-    val state: LiveData<ResultState<Pagination<Character>>> = _state
+    private val _state = MutableLiveData<ResultState<Pager<Character>>>()
+    val state: LiveData<ResultState<Pager<Character>>> = _state
 
-    private val _pagination = Pagination<Character>(Const.GridViewPaging.PAGE_SIZE)
+    private val _pagination = Pager<Character>(Const.GridViewPaging.PAGE_SIZE)
 
     fun getCharacters(reload: Boolean = false, query: String? = null) {
         if (reload) _pagination.reset()

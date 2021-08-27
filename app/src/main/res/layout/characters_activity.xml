@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".MainActivity">
+    tools:context=".features.characters.CharactersActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -27,6 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
                 android:contentDescription="@string/app_name"
+                android:adjustViewBounds="true"
                 android:src="@drawable/marvel_logo" />
 
         </androidx.appcompat.widget.Toolbar>

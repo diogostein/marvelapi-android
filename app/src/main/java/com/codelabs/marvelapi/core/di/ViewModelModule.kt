@@ -27,8 +27,4 @@ object ViewModelModule {
     @Provides
     fun provideSerieMapper() = SerieMapper
 
-    @ViewModelScoped
-    @Provides
-    fun provideStoryMapper() = StoryMapper
-
 }

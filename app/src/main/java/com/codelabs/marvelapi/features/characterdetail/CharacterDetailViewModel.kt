@@ -7,7 +7,7 @@ import com.codelabs.marvelapi.core.ResultState
 import com.codelabs.marvelapi.core.errors.Failure
 import com.codelabs.marvelapi.core.models.*
 import com.codelabs.marvelapi.features.characters.data.CharacterRepository
-import com.codelabs.marvelapi.shared.pagination.Pagination
+import com.codelabs.marvelapi.shared.pagination.Pager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,17 +19,17 @@ class CharacterDetailViewModel @Inject constructor(
     private val _characterState = MutableLiveData<ResultState<Character>>()
     val characterState: LiveData<ResultState<Character>> = _characterState
 
-    private val _characterComicsState = MutableLiveData<ResultState<Pagination<Comic>>>()
-    val characterComicsState: LiveData<ResultState<Pagination<Comic>>> = _characterComicsState
-    private val _comicsPagination = Pagination<Comic>(Const.HorizontalListViewPaging.PAGE_SIZE)
+    private val _characterComicsState = MutableLiveData<ResultState<Pager<Comic>>>()
+    val characterComicsState: LiveData<ResultState<Pager<Comic>>> = _characterComicsState
+    private val _comicsPagination = Pager<Comic>(Const.HorizontalListViewPaging.PAGE_SIZE)
 
-    private val _characterEventsState = MutableLiveData<ResultState<Pagination<Event>>>()
-    val characterEventsState: LiveData<ResultState<Pagination<Event>>> = _characterEventsState
-    private val _eventsPagination = Pagination<Event>(Const.HorizontalListViewPaging.PAGE_SIZE)
+    private val _characterEventsState = MutableLiveData<ResultState<Pager<Event>>>()
+    val characterEventsState: LiveData<ResultState<Pager<Event>>> = _characterEventsState
+    private val _eventsPagination = Pager<Event>(Const.HorizontalListViewPaging.PAGE_SIZE)
 
-    private val _characterSeriesState = MutableLiveData<ResultState<Pagination<Serie>>>()
-    val characterSeriesState: LiveData<ResultState<Pagination<Serie>>> = _characterSeriesState
-    private val _seriesPagination = Pagination<Serie>(Const.HorizontalListViewPaging.PAGE_SIZE)
+    private val _characterSeriesState = MutableLiveData<ResultState<Pager<Serie>>>()
+    val characterSeriesState: LiveData<ResultState<Pager<Serie>>> = _characterSeriesState
+    private val _seriesPagination = Pager<Serie>(Const.HorizontalListViewPaging.PAGE_SIZE)
 
     fun getCharacter(id: Int) {
         viewModelScope.launch {
@@ -65,12 +65,12 @@ class CharacterDetailViewModel @Inject constructor(
     }
 
     private fun <T>buildPaginationState(
-        state: MutableLiveData<ResultState<Pagination<T>>>,
-        pagination: Pagination<T>,
+        state: MutableLiveData<ResultState<Pager<T>>>,
+        pager: Pager<T>,
         reload: Boolean,
         onRepositoryResult: suspend () -> Either<Failure, List<T>>
     ) {
-        if (reload) pagination.reset()
+        if (reload) pager.reset()
 
         viewModelScope.launch {
             state.postValue(
@@ -86,8 +86,8 @@ class CharacterDetailViewModel @Inject constructor(
                         else ResultState.Error(it.message)
                     },
                     {
-                        if (pagination.refresh(it).hasReachedEndOfResults) ResultState.PaginationFinished
-                        else ResultState.Completed(pagination)
+                        if (pager.refresh(it).hasReachedEndOfResults) ResultState.PaginationFinished
+                        else ResultState.Completed(pager)
                     }
                 )
             )

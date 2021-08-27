@@ -4,9 +4,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class PaginationController<T, VH : PagingAdapter.BinderViewHolder<T>>(
+class PagingController<T, VH : PagingAdapter.BinderViewHolder<T>>(
     val pagingAdapter: PagingAdapter<T, VH>,
-    private val paginationScrollHandler: PaginationScrollHandler,
+    private val paginationScrollHandler: PagingScrollHandler,
 ) {
 
     var layoutManager: LinearLayoutManager? = null
@@ -41,31 +41,31 @@ class PaginationController<T, VH : PagingAdapter.BinderViewHolder<T>>(
         return paginationScrollHandler.onScrollListener(onLoadMoreItems)
     }
 
-    private fun setScrollState(state: PaginationScrollHandler.State) {
+    private fun setScrollState(state: PagingScrollHandler.State) {
         paginationScrollHandler.state = state
     }
 
     fun setIdle() {
-        setScrollState(PaginationScrollHandler.State.Idle)
+        setScrollState(PagingScrollHandler.State.Idle)
     }
 
     fun setLoading() {
-        setScrollState(PaginationScrollHandler.State.Loading)
+        setScrollState(PagingScrollHandler.State.Loading)
         pagingAdapter.showLoadingIndicator()
     }
 
     fun setError(message: String) = pagingAdapter.showError(message)
 
     fun setFinished(onPostFinished: (() -> Unit)? = null) {
-        setScrollState(PaginationScrollHandler.State.Finished)
+        setScrollState(PagingScrollHandler.State.Finished)
         pagingAdapter.showFinished()
         onPostFinished?.invoke()
     }
 
-    fun setCompleted(pagination: Pagination<T>, onAdapterRefreshed: () -> Unit) {
+    fun setCompleted(pager: Pager<T>, onAdapterRefreshed: () -> Unit) {
         pagingAdapter.hideLoadingIndicator()
 
-        val pagingData = pagination.collectLatest
+        val pagingData = pager.collectLatest
 
         if (pagingData != null) {
             pagingAdapter.submitData(pagingData)

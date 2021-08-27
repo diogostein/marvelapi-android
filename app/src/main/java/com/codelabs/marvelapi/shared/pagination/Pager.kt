@@ -1,6 +1,6 @@
 package com.codelabs.marvelapi.shared.pagination
 
-class Pagination<T>(val pageSize: Int) {
+class Pager<T>(val pageSize: Int) {
     private var _nextPage = 1
     private var _hasReachedEndOfResults = false
     private val _listHolder = mutableListOf<PagingData<T>>()
@@ -14,7 +14,7 @@ class Pagination<T>(val pageSize: Int) {
     val offset: Int
         get() = pageSize * (_nextPage - 1)
 
-    fun refresh(list: List<T>): Pagination<T> {
+    fun refresh(list: List<T>): Pager<T> {
         _hasReachedEndOfResults = list.isEmpty()
 
         if (!_hasReachedEndOfResults) {

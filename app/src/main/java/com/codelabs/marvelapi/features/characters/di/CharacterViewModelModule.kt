@@ -30,7 +30,6 @@ object CharacterViewModelModule {
         comicMapper: ComicMapper,
         eventMapper: EventMapper,
         serieMapper: SerieMapper,
-        storyMapper: StoryMapper,
     ): CharacterRepository {
         return CharacterRepositoryImpl(
             characterRemoteDataSource,
@@ -38,7 +37,6 @@ object CharacterViewModelModule {
             comicMapper,
             eventMapper,
             serieMapper,
-            storyMapper
         )
     }
 

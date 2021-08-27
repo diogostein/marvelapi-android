@@ -36,11 +36,4 @@ interface MarvelApiService {
         @Query("limit") limit: Int,
         @Query("offset") offset: Int,
     ): DataWrapperResponse<SerieResponse>
-
-    @GET("v1/public/characters/{character-id}/stories")
-    suspend fun getCharacterStories(
-        @Path("character-id") characterId: Int,
-        @Query("limit") limit: Int,
-        @Query("offset") offset: Int,
-    ): DataWrapperResponse<StoryResponse>
 }

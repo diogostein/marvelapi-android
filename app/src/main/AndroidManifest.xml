@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" android:launchMode="singleTop">
+        <activity android:name=".features.characters.CharactersActivity" android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,7 +21,7 @@
         </activity>
         <activity
             android:name=".features.characterdetail.CharacterDetailActivity"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".features.characters.CharactersActivity" />
     </application>
 
 </manifest>

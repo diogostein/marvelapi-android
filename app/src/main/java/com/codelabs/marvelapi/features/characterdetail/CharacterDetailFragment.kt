@@ -11,8 +11,8 @@ import com.codelabs.marvelapi.databinding.CharacterDetailFragmentBinding
 import com.codelabs.marvelapi.features.characterdetail.adapters.ComicsPagingAdapter
 import com.codelabs.marvelapi.features.characterdetail.adapters.EventsPagingAdapter
 import com.codelabs.marvelapi.features.characterdetail.adapters.SeriesPagingAdapter
-import com.codelabs.marvelapi.shared.pagination.Pagination
-import com.codelabs.marvelapi.shared.pagination.PaginationController
+import com.codelabs.marvelapi.shared.pagination.Pager
+import com.codelabs.marvelapi.shared.pagination.PagingController
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -25,16 +25,16 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
     private val binding get() = _binding!!
 
     @Inject
-    lateinit var comicsPaginationController:
-            PaginationController<Comic, ComicsPagingAdapter.ComicViewHolder>
+    lateinit var comicsPagingController:
+            PagingController<Comic, ComicsPagingAdapter.ComicViewHolder>
 
     @Inject
-    lateinit var eventsPaginationController:
-            PaginationController<Event, EventsPagingAdapter.EventViewHolder>
+    lateinit var eventsPagingController:
+            PagingController<Event, EventsPagingAdapter.EventViewHolder>
 
     @Inject
-    lateinit var seriesPaginationController:
-            PaginationController<Serie, SeriesPagingAdapter.SerieViewHolder>
+    lateinit var seriesPagingController:
+            PagingController<Serie, SeriesPagingAdapter.SerieViewHolder>
 
     companion object {
         private const val ARG_CHARACTER_ID = "ARG_CHARACTER_ID"
@@ -106,7 +106,7 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
     }
 
     private fun setupComics() {
-        comicsPaginationController.apply {
+        comicsPagingController.apply {
             val onGetCharacterComics: (Boolean) -> Unit =
                 { viewModel.getCharacterComics(characterId!!, reload = it) }
 
@@ -121,21 +121,21 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
         }
 
         viewModel.characterComicsState.observe(viewLifecycleOwner) { state ->
-            comicsPaginationController.setIdle()
+            comicsPagingController.setIdle()
 
             when (state) {
                 is ResultState.Loading -> binding.hlvComics.showProgressIndicator()
                 is ResultState.Error -> binding.hlvComics.showError(state.message)
-                is ResultState.PaginationLoading -> comicsPaginationController.setLoading()
-                is ResultState.PaginationError -> comicsPaginationController.setError(state.message)
+                is ResultState.PaginationLoading -> comicsPagingController.setLoading()
+                is ResultState.PaginationError -> comicsPagingController.setError(state.message)
                 is ResultState.PaginationFinished -> {
-                    comicsPaginationController.setFinished {
+                    comicsPagingController.setFinished {
                         binding.hlvComics.showRecyclerView()
                     }
                 }
                 is ResultState.Completed<*> -> {
-                    comicsPaginationController.setCompleted(
-                        (state as ResultState.Completed<Pagination<Comic>>).value) {
+                    comicsPagingController.setCompleted(
+                        (state as ResultState.Completed<Pager<Comic>>).value) {
                         binding.hlvComics.showRecyclerView()
                     }
                 }
@@ -144,7 +144,7 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
     }
 
     private fun setupEvents() {
-        eventsPaginationController.apply {
+        eventsPagingController.apply {
             val onGetCharacterEvents: (Boolean) -> Unit =
                 { viewModel.getCharacterEvents(characterId!!, reload = it) }
 
@@ -159,21 +159,21 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
         }
 
         viewModel.characterEventsState.observe(viewLifecycleOwner) { state ->
-            eventsPaginationController.setIdle()
+            eventsPagingController.setIdle()
 
             when (state) {
                 is ResultState.Loading -> binding.hlvEvents.showProgressIndicator()
                 is ResultState.Error -> binding.hlvEvents.showError(state.message)
-                is ResultState.PaginationLoading -> eventsPaginationController.setLoading()
-                is ResultState.PaginationError -> eventsPaginationController.setError(state.message)
+                is ResultState.PaginationLoading -> eventsPagingController.setLoading()
+                is ResultState.PaginationError -> eventsPagingController.setError(state.message)
                 is ResultState.PaginationFinished -> {
-                    eventsPaginationController.setFinished {
+                    eventsPagingController.setFinished {
                         binding.hlvEvents.showRecyclerView()
                     }
                 }
                 is ResultState.Completed<*> -> {
-                    eventsPaginationController.setCompleted(
-                        (state as ResultState.Completed<Pagination<Event>>).value) {
+                    eventsPagingController.setCompleted(
+                        (state as ResultState.Completed<Pager<Event>>).value) {
                         binding.hlvEvents.showRecyclerView()
                     }
                 }
@@ -182,7 +182,7 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
     }
 
     private fun setupSeries() {
-        seriesPaginationController.apply {
+        seriesPagingController.apply {
             val onGetCharacterSeries: (Boolean) -> Unit =
                 { viewModel.getCharacterSeries(characterId!!, reload = it) }
 
@@ -197,21 +197,21 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
         }
 
         viewModel.characterSeriesState.observe(viewLifecycleOwner) { state ->
-            seriesPaginationController.setIdle()
+            seriesPagingController.setIdle()
 
             when (state) {
                 is ResultState.Loading -> binding.hlvSeries.showProgressIndicator()
                 is ResultState.Error -> binding.hlvSeries.showError(state.message)
-                is ResultState.PaginationLoading -> seriesPaginationController.setLoading()
-                is ResultState.PaginationError -> seriesPaginationController.setError(state.message)
+                is ResultState.PaginationLoading -> seriesPagingController.setLoading()
+                is ResultState.PaginationError -> seriesPagingController.setError(state.message)
                 is ResultState.PaginationFinished -> {
-                    seriesPaginationController.setFinished {
+                    seriesPagingController.setFinished {
                         binding.hlvSeries.showRecyclerView()
                     }
                 }
                 is ResultState.Completed<*> -> {
-                    seriesPaginationController.setCompleted(
-                        (state as ResultState.Completed<Pagination<Serie>>).value) {
+                    seriesPagingController.setCompleted(
+                        (state as ResultState.Completed<Pager<Serie>>).value) {
                         binding.hlvSeries.showRecyclerView()
                     }
                 }
