@@ -2,6 +2,7 @@ package com.codelabs.marvelapi.features.characters.data
 
 import arrow.core.Either
 import com.codelabs.marvelapi.core.errors.Failure
+import com.codelabs.marvelapi.core.helpers.NetworkHelper
 import com.codelabs.marvelapi.core.mappers.*
 import com.codelabs.marvelapi.core.models.*
 
@@ -19,9 +20,12 @@ class CharacterRepositoryImpl(
     private val comicMapper: ComicMapper,
     private val eventMapper: EventMapper,
     private val serieMapper: SerieMapper,
+    private val networkHelper: NetworkHelper
 ) : CharacterRepository {
 
     override suspend fun getCharacters(limit: Int, offset: Int, query: String?): Either<Failure, List<Character>> {
+        if (!networkHelper.isConnectionAvailable()) return Either.Left(Failure.NoConnection)
+
         val result = remoteDataSource.getCharacters(limit, offset, query)
 
         return result.fold(
@@ -31,6 +35,8 @@ class CharacterRepositoryImpl(
     }
 
     override suspend fun getCharacter(id: Int): Either<Failure, Character> {
+        if (!networkHelper.isConnectionAvailable()) return Either.Left(Failure.NoConnection)
+
         val result = remoteDataSource.getCharacter(id)
 
         return result.fold(
@@ -44,6 +50,8 @@ class CharacterRepositoryImpl(
         limit: Int,
         offset: Int,
     ): Either<Failure, List<Comic>> {
+        if (!networkHelper.isConnectionAvailable()) return Either.Left(Failure.NoConnection)
+
         val result = remoteDataSource.getCharacterComics(characterId, limit, offset)
 
         return result.fold(
@@ -57,6 +65,8 @@ class CharacterRepositoryImpl(
         limit: Int,
         offset: Int
     ): Either<Failure, List<Event>> {
+        if (!networkHelper.isConnectionAvailable()) return Either.Left(Failure.NoConnection)
+
         val result = remoteDataSource.getCharacterEvents(characterId, limit, offset)
 
         return result.fold(
@@ -70,6 +80,8 @@ class CharacterRepositoryImpl(
         limit: Int,
         offset: Int
     ): Either<Failure, List<Serie>> {
+        if (!networkHelper.isConnectionAvailable()) return Either.Left(Failure.NoConnection)
+
         val result = remoteDataSource.getCharacterSeries(characterId, limit, offset)
 
         return result.fold(

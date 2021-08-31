@@ -7,4 +7,7 @@
     <string name="events">Eventos</string>
     <string name="series">Series</string>
     <string name="stories">Estorias</string>
+    <string name="no_internet_connection">Sem conexão com a internet.</string>
+    <string name="invalid_credentials">Credenciais inválidas.</string>
+    <string name="failed_to_access_server">Falha ao acessar servidor.\nVerifique sua conexão ou tente mais tarde.</string>
 </resources>

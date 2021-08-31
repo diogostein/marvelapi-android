@@ -33,7 +33,7 @@ object RetrofitModule {
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl("http://gateway.marvel.com/")
+            .baseUrl("https://gateway.marvel.com/")
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
     }
