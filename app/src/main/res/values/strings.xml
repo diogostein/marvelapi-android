@@ -10,4 +10,6 @@
     <string name="no_internet_connection">Sem conexão com a internet.</string>
     <string name="invalid_credentials">Credenciais inválidas.</string>
     <string name="failed_to_access_server">Falha ao acessar servidor.\nVerifique sua conexão ou tente mais tarde.</string>
+    <string name="failed_to_access_database">Falha ao acessar banco de dados.</string>
+    <string name="unknown_fail">Falha desconhecida.</string>
 </resources>

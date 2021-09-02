@@ -55,7 +55,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
             setOnItemClickListener {
                 startActivity(Intent(context, CharacterDetailActivity::class.java).apply {
                     putExtras(Bundle().apply {
-                        putInt(CharacterDetailActivity.ARG_CHARACTER_ID, it.id)
+                        putInt(CharacterDetailActivity.ARG_CHARACTER_ID, it.id!!)
                     })
                 })
             }

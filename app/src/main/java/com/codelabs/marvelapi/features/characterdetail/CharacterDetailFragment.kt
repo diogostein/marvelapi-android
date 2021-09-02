@@ -91,7 +91,7 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
         (activity as CharacterDetailActivity).fillAppBar(character)
 
         binding.tvDescription.apply {
-            if (character.description.isNotBlank()) {
+            if (character.description?.isNotBlank() == true) {
                 text = character.description
             } else {
                 visibility = View.GONE
@@ -100,9 +100,11 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
 
         binding.contentStateView.showContent()
 
-        viewModel.getCharacterComics(character.id, reload = true)
-        viewModel.getCharacterEvents(character.id, reload = true)
-        viewModel.getCharacterSeries(character.id, reload = true)
+        val id = character.id!!
+
+        viewModel.getCharacterComics(id, reload = true)
+        viewModel.getCharacterEvents(id, reload = true)
+        viewModel.getCharacterSeries(id, reload = true)
     }
 
     private fun setupComics() {

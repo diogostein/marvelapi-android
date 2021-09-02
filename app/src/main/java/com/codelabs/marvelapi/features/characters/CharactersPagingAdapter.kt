@@ -33,7 +33,7 @@ class CharactersPagingAdapter
             binding.tvName.text = value.name
 
             Glide.with(itemView)
-                    .load(value.thumbnail.url)
+                    .load(value.thumbnail?.url)
                     .placeholder(R.drawable.marvel_placeholder_thumb)
                     .into(binding.ivAvatar)
         }

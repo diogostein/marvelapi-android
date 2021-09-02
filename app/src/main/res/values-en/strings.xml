@@ -8,4 +8,6 @@
     <string name="no_internet_connection">No internet connection.</string>
     <string name="invalid_credentials">Invalid credentials.</string>
     <string name="failed_to_access_server">Failed to access server.\nPlease check your connection or try again later.</string>
+    <string name="failed_to_access_database">Failed to access database.</string>
+    <string name="unknown_fail">Unknown fail.</string>
 </resources>

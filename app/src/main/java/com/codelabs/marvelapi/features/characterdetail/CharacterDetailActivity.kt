@@ -44,7 +44,7 @@ class CharacterDetailActivity : AppCompatActivity() {
         binding.collapsingToolbar.title = character.name
 
         Glide.with(this)
-            .load(character.thumbnail.url)
+            .load(character.thumbnail?.url)
             .placeholder(R.drawable.marvel_placeholder_medium)
             .into(binding.ivCollapsing)
     }

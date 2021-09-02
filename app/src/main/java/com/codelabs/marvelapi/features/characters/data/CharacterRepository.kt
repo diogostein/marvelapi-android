@@ -1,6 +1,7 @@
 package com.codelabs.marvelapi.features.characters.data
 
 import arrow.core.Either
+import com.codelabs.marvelapi.core.errors.CustomException
 import com.codelabs.marvelapi.core.errors.Failure
 import com.codelabs.marvelapi.core.helpers.NetworkHelper
 import com.codelabs.marvelapi.core.mappers.*
@@ -16,6 +17,7 @@ interface CharacterRepository {
 
 class CharacterRepositoryImpl(
     private val remoteDataSource: CharacterRemoteDataSource,
+    private val localDataSource: CharacterLocalDataSource,
     private val characterMapper: CharacterMapper,
     private val comicMapper: ComicMapper,
     private val eventMapper: EventMapper,
@@ -26,23 +28,43 @@ class CharacterRepositoryImpl(
     override suspend fun getCharacters(limit: Int, offset: Int, query: String?): Either<Failure, List<Character>> {
         if (!networkHelper.isConnectionAvailable()) return Either.Left(Failure.NoConnection)
 
-        val result = remoteDataSource.getCharacters(limit, offset, query)
+        return try {
+            val result = remoteDataSource.getCharacters(limit, offset, query)
+            val characterEntities = characterMapper.mapResponseToEntity(result.data.results)
 
-        return result.fold(
-            { Either.Left(it) },
-            { Either.Right(characterMapper.map(it.data.results)) }
-        )
+            localDataSource.insertCharacters(characterEntities)
+
+            Either.Right(characterMapper.mapEntityToModel(characterEntities))
+        } catch (e: CustomException.Server) {
+            Either.Left(e.apiError.getFailureType())
+        } catch (e: CustomException) {
+            Either.Left(Failure(e.message))
+        }
     }
 
     override suspend fun getCharacter(id: Int): Either<Failure, Character> {
-        if (!networkHelper.isConnectionAvailable()) return Either.Left(Failure.NoConnection)
+        val character = localDataSource.getCharacter(id)
 
-        val result = remoteDataSource.getCharacter(id)
+        if (character != null) {
+            return Either.Right(characterMapper.mapEntityToModel(character))
+        }
 
-        return result.fold(
-            { Either.Left(it) },
-            { Either.Right(characterMapper.map(it.data.results.first())) }
-        )
+        if (!networkHelper.isConnectionAvailable()) {
+            return Either.Left(Failure.NoConnection)
+        }
+
+        return try {
+            val result = remoteDataSource.getCharacter(id)
+            val characterEntity = characterMapper.mapResponseToEntity(result.data.results.first())
+
+            localDataSource.insertCharacters(arrayListOf(characterEntity))
+
+            Either.Right(characterMapper.mapEntityToModel(characterEntity))
+        } catch (e: CustomException.Server) {
+            Either.Left(e.apiError.getFailureType())
+        } catch (e: CustomException) {
+            Either.Left(Failure(e.message))
+        }
     }
 
     override suspend fun getCharacterComics(
