@@ -25,9 +25,10 @@ class PagingScrollHandler {
 //                Log.d("DS", "totalItemCount: $totalItemCount")
 //                Log.d("DS", "firstVisibleItemPosition: $firstVisibleItemPosition")
 
-                if (state !is State.Loading && state !is State.Finished) {
+                if (state is State.Idle) {
                     if (visibleItemCount + firstVisibleItemPosition >= totalItemCount - DISTANCE_TO_LOAD
                             && firstVisibleItemPosition >= 0) {
+                        state = State.Blocked
                         onLoadMoreItems.invoke()
                     }
                 }
@@ -37,7 +38,6 @@ class PagingScrollHandler {
 
     sealed class State {
         object Idle : State()
-        object Loading : State()
-        object Finished : State()
+        object Blocked : State()
     }
 }

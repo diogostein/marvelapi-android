@@ -45,19 +45,15 @@ class PagingController<T, VH : PagingAdapter.BinderViewHolder<T>>(
         paginationScrollHandler.state = state
     }
 
-    fun setIdle() {
-        setScrollState(PagingScrollHandler.State.Idle)
-    }
-
     fun setLoading() {
-        setScrollState(PagingScrollHandler.State.Loading)
+        setScrollState(PagingScrollHandler.State.Blocked)
         pagingAdapter.showLoadingIndicator()
     }
 
     fun setError(message: String) = pagingAdapter.showError(message)
 
     fun setFinished(onPostFinished: (() -> Unit)? = null) {
-        setScrollState(PagingScrollHandler.State.Finished)
+        setScrollState(PagingScrollHandler.State.Blocked)
         pagingAdapter.showFinished()
         onPostFinished?.invoke()
     }
@@ -70,6 +66,7 @@ class PagingController<T, VH : PagingAdapter.BinderViewHolder<T>>(
         if (pagingData != null) {
             pagingAdapter.submitData(pagingData)
             onAdapterRefreshed.invoke()
+            setScrollState(PagingScrollHandler.State.Idle)
         } else {
             setFinished()
         }

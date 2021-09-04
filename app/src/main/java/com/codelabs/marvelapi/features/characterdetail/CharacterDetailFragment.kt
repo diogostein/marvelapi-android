@@ -123,8 +123,6 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
         }
 
         viewModel.characterComicsState.observe(viewLifecycleOwner) { state ->
-            comicsPagingController.setIdle()
-
             when (state) {
                 is ResultState.Loading -> binding.hlvComics.showProgressIndicator()
                 is ResultState.Error -> binding.hlvComics.showError(state.message)
@@ -161,8 +159,6 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
         }
 
         viewModel.characterEventsState.observe(viewLifecycleOwner) { state ->
-            eventsPagingController.setIdle()
-
             when (state) {
                 is ResultState.Loading -> binding.hlvEvents.showProgressIndicator()
                 is ResultState.Error -> binding.hlvEvents.showError(state.message)
@@ -199,8 +195,6 @@ class CharacterDetailFragment : Fragment(R.layout.character_detail_fragment) {
         }
 
         viewModel.characterSeriesState.observe(viewLifecycleOwner) { state ->
-            seriesPagingController.setIdle()
-
             when (state) {
                 is ResultState.Loading -> binding.hlvSeries.showProgressIndicator()
                 is ResultState.Error -> binding.hlvSeries.showError(state.message)

@@ -70,8 +70,6 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
         }
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
-            pagingController.setIdle()
-
             when (state) {
                 is ResultState.Loading -> onLoading()
                 is ResultState.Error -> onError(state.message)
