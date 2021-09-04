@@ -74,12 +74,18 @@ class CharacterRepositoryImpl(
     ): Either<Failure, List<Comic>> {
         if (!networkHelper.isConnectionAvailable()) return Either.Left(Failure.NoConnection)
 
-        val result = remoteDataSource.getCharacterComics(characterId, limit, offset)
+        return try {
+            val result = remoteDataSource.getCharacterComics(characterId, limit, offset)
+            val comicEntities = comicMapper.mapResponseToEntity(result.data.results)
 
-        return result.fold(
-            { Either.Left(it) },
-            { Either.Right(comicMapper.map(it.data.results)) }
-        )
+            localDataSource.insertCharacterComics(characterId, comicEntities)
+
+            Either.Right(comicMapper.mapEntityToModel(comicEntities))
+        } catch (e: CustomException.Server) {
+            Either.Left(e.apiError.getFailureType())
+        } catch (e: CustomException) {
+            Either.Left(Failure(e.message))
+        }
     }
 
     override suspend fun getCharacterEvents(
@@ -89,12 +95,18 @@ class CharacterRepositoryImpl(
     ): Either<Failure, List<Event>> {
         if (!networkHelper.isConnectionAvailable()) return Either.Left(Failure.NoConnection)
 
-        val result = remoteDataSource.getCharacterEvents(characterId, limit, offset)
+        return try {
+            val result = remoteDataSource.getCharacterEvents(characterId, limit, offset)
+            val eventEntities = eventMapper.mapResponseToEntity(result.data.results)
 
-        return result.fold(
-            { Either.Left(it) },
-            { Either.Right(eventMapper.map(it.data.results)) }
-        )
+            localDataSource.insertCharacterEvents(characterId, eventEntities)
+
+            Either.Right(eventMapper.mapEntityToModel(eventEntities))
+        } catch (e: CustomException.Server) {
+            Either.Left(e.apiError.getFailureType())
+        } catch (e: CustomException) {
+            Either.Left(Failure(e.message))
+        }
     }
 
     override suspend fun getCharacterSeries(
@@ -104,12 +116,18 @@ class CharacterRepositoryImpl(
     ): Either<Failure, List<Serie>> {
         if (!networkHelper.isConnectionAvailable()) return Either.Left(Failure.NoConnection)
 
-        val result = remoteDataSource.getCharacterSeries(characterId, limit, offset)
+        return try {
+            val result = remoteDataSource.getCharacterSeries(characterId, limit, offset)
+            val serieEntities = serieMapper.mapResponseToEntity(result.data.results)
 
-        return result.fold(
-            { Either.Left(it) },
-            { Either.Right(serieMapper.map(it.data.results)) }
-        )
+            localDataSource.insertCharacterSeries(characterId, serieEntities)
+
+            Either.Right(serieMapper.mapEntityToModel(serieEntities))
+        } catch (e: CustomException.Server) {
+            Either.Left(e.apiError.getFailureType())
+        } catch (e: CustomException) {
+            Either.Left(Failure(e.message))
+        }
     }
 
 }

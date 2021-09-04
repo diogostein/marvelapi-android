@@ -44,7 +44,7 @@ class SeriesPagingAdapter : PagingAdapter<Serie, SeriesPagingAdapter.SerieViewHo
             this.value = value
 
             Glide.with(itemView)
-                .load(value.thumbnail.url)
+                .load(value.thumbnail?.url)
                 .placeholder(R.drawable.comics_placeholder)
                 .into(binding.ivSerie)
         }

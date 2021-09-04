@@ -44,7 +44,7 @@ class EventsPagingAdapter : PagingAdapter<Event, EventsPagingAdapter.EventViewHo
             this.value = value
 
             Glide.with(itemView)
-                .load(value.thumbnail.url)
+                .load(value.thumbnail?.url)
                 .placeholder(R.drawable.comics_placeholder)
                 .into(binding.ivEvent)
         }

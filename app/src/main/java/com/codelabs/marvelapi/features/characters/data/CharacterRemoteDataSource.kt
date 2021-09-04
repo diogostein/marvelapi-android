@@ -1,11 +1,9 @@
 package com.codelabs.marvelapi.features.characters.data
 
-import arrow.core.Either
 import com.codelabs.marvelapi.core.api.MarvelApiErrorParser
 import com.codelabs.marvelapi.core.api.MarvelApiService
 import com.codelabs.marvelapi.core.api.responses.*
 import com.codelabs.marvelapi.core.errors.CustomException
-import com.codelabs.marvelapi.core.errors.Failure
 import retrofit2.HttpException
 
 interface CharacterRemoteDataSource {
@@ -14,11 +12,11 @@ interface CharacterRemoteDataSource {
     suspend fun getCharacter(id: Int):
             DataWrapperResponse<CharacterResponse>
     suspend fun getCharacterComics(characterId: Int, limit: Int, offset: Int):
-            Either<Failure, DataWrapperResponse<ComicResponse>>
+            DataWrapperResponse<ComicResponse>
     suspend fun getCharacterEvents(characterId: Int, limit: Int, offset: Int):
-            Either<Failure, DataWrapperResponse<EventResponse>>
+            DataWrapperResponse<EventResponse>
     suspend fun getCharacterSeries(characterId: Int, limit: Int, offset: Int):
-            Either<Failure, DataWrapperResponse<SerieResponse>>
+            DataWrapperResponse<SerieResponse>
 }
 
 class CharacterRemoteDataSourceImpl(
@@ -46,41 +44,35 @@ class CharacterRemoteDataSourceImpl(
     }
 
     override suspend fun getCharacterComics(characterId: Int, limit: Int, offset: Int):
-            Either<Failure, DataWrapperResponse<ComicResponse>> {
+            DataWrapperResponse<ComicResponse> {
         return try {
-            val response = apiService.getCharacterComics(characterId, limit, offset)
-
-            Either.Right(response)
+            apiService.getCharacterComics(characterId, limit, offset)
         } catch (e: HttpException) {
-            Either.Left(MarvelApiErrorParser.parse(e.response()!!).getFailureType())
+            throw CustomException.Server(MarvelApiErrorParser.parse(e.response()!!))
         } catch (e: Exception) {
-            Either.Left(Failure.Server(e.message))
+            throw CustomException(message = e.message)
         }
     }
 
     override suspend fun getCharacterEvents(characterId: Int, limit: Int, offset: Int):
-            Either<Failure, DataWrapperResponse<EventResponse>> {
+            DataWrapperResponse<EventResponse> {
         return try {
-            val response = apiService.getCharacterEvents(characterId, limit, offset)
-
-            Either.Right(response)
+            apiService.getCharacterEvents(characterId, limit, offset)
         } catch (e: HttpException) {
-            Either.Left(MarvelApiErrorParser.parse(e.response()!!).getFailureType())
+            throw CustomException.Server(MarvelApiErrorParser.parse(e.response()!!))
         } catch (e: Exception) {
-            Either.Left(Failure.Server(e.message))
+            throw CustomException(message = e.message)
         }
     }
 
     override suspend fun getCharacterSeries(characterId: Int, limit: Int, offset: Int):
-            Either<Failure, DataWrapperResponse<SerieResponse>> {
+            DataWrapperResponse<SerieResponse> {
         return try {
-            val response = apiService.getCharacterSeries(characterId, limit, offset)
-
-            Either.Right(response)
+            apiService.getCharacterSeries(characterId, limit, offset)
         } catch (e: HttpException) {
-            Either.Left(MarvelApiErrorParser.parse(e.response()!!).getFailureType())
+            throw CustomException.Server(MarvelApiErrorParser.parse(e.response()!!))
         } catch (e: Exception) {
-            Either.Left(Failure.Server(e.message))
+            throw CustomException(message = e.message)
         }
     }
 

@@ -4,6 +4,6 @@ import com.squareup.moshi.Json
 
 data class SerieResponse(
     @field:Json(name = "id") val id: Int,
-    @field:Json(name = "title") val title: String,
-    @field:Json(name = "thumbnail") val thumbnail: ImageResponse,
+    @field:Json(name = "title") val title: String?,
+    @field:Json(name = "thumbnail") val thumbnail: ImageResponse?,
 )
