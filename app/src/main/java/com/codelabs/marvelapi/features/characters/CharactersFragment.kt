@@ -96,6 +96,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
         val searchView = searchItem.actionView as SearchView
 
         val listener = SearchViewTextListener({
+            searchView.clearFocus()
             querySearch = it
             reload()
         }, {

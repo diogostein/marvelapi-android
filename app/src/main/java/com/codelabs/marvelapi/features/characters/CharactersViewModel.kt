@@ -20,6 +20,7 @@ class CharactersViewModel @Inject constructor(
     private val _pagination = Pager<Character>(Const.GridViewPaging.PAGE_SIZE)
 
     fun getCharacters(reload: Boolean = false, query: String? = null) {
+        if (_state.value is ResultState.Loading) return
         if (reload) _pagination.reset()
 
         viewModelScope.launch {

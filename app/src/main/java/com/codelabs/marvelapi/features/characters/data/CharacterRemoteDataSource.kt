@@ -1,10 +1,8 @@
 package com.codelabs.marvelapi.features.characters.data
 
-import com.codelabs.marvelapi.core.api.MarvelApiErrorParser
+import com.codelabs.marvelapi.shared.data.ResultHandler
 import com.codelabs.marvelapi.core.api.MarvelApiService
 import com.codelabs.marvelapi.core.api.responses.*
-import com.codelabs.marvelapi.core.errors.CustomException
-import retrofit2.HttpException
 
 interface CharacterRemoteDataSource {
     suspend fun getCharacters(limit: Int, offset: Int, query: String?):
@@ -23,56 +21,37 @@ class CharacterRemoteDataSourceImpl(
     private val apiService: MarvelApiService,
 ) : CharacterRemoteDataSource {
 
-    override suspend fun getCharacters(limit: Int, offset: Int, query: String?): DataWrapperResponse<CharacterResponse> {
-        return try {
+    override suspend fun getCharacters(limit: Int, offset: Int, query: String?):
+            DataWrapperResponse<CharacterResponse> {
+        return ResultHandler.onRemoteDataSource {
             apiService.getCharacters(limit, offset, query)
-        } catch (e: HttpException) {
-            throw CustomException.Server(MarvelApiErrorParser.parse(e.response()!!))
-        } catch (e: Exception) {
-            throw CustomException(message = e.message)
         }
     }
 
     override suspend fun getCharacter(id: Int): DataWrapperResponse<CharacterResponse> {
-        return try {
+        return ResultHandler.onRemoteDataSource {
             apiService.getCharacter(id)
-        } catch (e: HttpException) {
-            throw CustomException.Server(MarvelApiErrorParser.parse(e.response()!!))
-        } catch (e: Exception) {
-            throw CustomException(message = e.message)
         }
     }
 
     override suspend fun getCharacterComics(characterId: Int, limit: Int, offset: Int):
             DataWrapperResponse<ComicResponse> {
-        return try {
+        return ResultHandler.onRemoteDataSource {
             apiService.getCharacterComics(characterId, limit, offset)
-        } catch (e: HttpException) {
-            throw CustomException.Server(MarvelApiErrorParser.parse(e.response()!!))
-        } catch (e: Exception) {
-            throw CustomException(message = e.message)
         }
     }
 
     override suspend fun getCharacterEvents(characterId: Int, limit: Int, offset: Int):
             DataWrapperResponse<EventResponse> {
-        return try {
+        return ResultHandler.onRemoteDataSource {
             apiService.getCharacterEvents(characterId, limit, offset)
-        } catch (e: HttpException) {
-            throw CustomException.Server(MarvelApiErrorParser.parse(e.response()!!))
-        } catch (e: Exception) {
-            throw CustomException(message = e.message)
         }
     }
 
     override suspend fun getCharacterSeries(characterId: Int, limit: Int, offset: Int):
             DataWrapperResponse<SerieResponse> {
-        return try {
+        return ResultHandler.onRemoteDataSource {
             apiService.getCharacterSeries(characterId, limit, offset)
-        } catch (e: HttpException) {
-            throw CustomException.Server(MarvelApiErrorParser.parse(e.response()!!))
-        } catch (e: Exception) {
-            throw CustomException(message = e.message)
         }
     }
 

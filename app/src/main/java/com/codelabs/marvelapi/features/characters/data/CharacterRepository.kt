@@ -1,7 +1,7 @@
 package com.codelabs.marvelapi.features.characters.data
 
 import arrow.core.Either
-import com.codelabs.marvelapi.core.errors.CustomException
+import com.codelabs.marvelapi.shared.data.ResultHandler
 import com.codelabs.marvelapi.core.errors.Failure
 import com.codelabs.marvelapi.core.helpers.NetworkHelper
 import com.codelabs.marvelapi.core.mappers.*
@@ -28,17 +28,13 @@ class CharacterRepositoryImpl(
     override suspend fun getCharacters(limit: Int, offset: Int, query: String?): Either<Failure, List<Character>> {
         if (!networkHelper.isConnectionAvailable()) return Either.Left(Failure.NoConnection)
 
-        return try {
+        return ResultHandler.onRepository {
             val result = remoteDataSource.getCharacters(limit, offset, query)
             val characterEntities = characterMapper.mapResponseToEntity(result.data.results)
 
             localDataSource.insertCharacters(characterEntities)
 
             Either.Right(characterMapper.mapEntityToModel(characterEntities))
-        } catch (e: CustomException.Server) {
-            Either.Left(e.apiError.getFailureType())
-        } catch (e: CustomException) {
-            Either.Left(Failure(e.message))
         }
     }
 
@@ -53,17 +49,13 @@ class CharacterRepositoryImpl(
             return Either.Left(Failure.NoConnection)
         }
 
-        return try {
+        return ResultHandler.onRepository {
             val result = remoteDataSource.getCharacter(id)
             val characterEntity = characterMapper.mapResponseToEntity(result.data.results.first())
 
             localDataSource.insertCharacters(arrayListOf(characterEntity))
 
             Either.Right(characterMapper.mapEntityToModel(characterEntity))
-        } catch (e: CustomException.Server) {
-            Either.Left(e.apiError.getFailureType())
-        } catch (e: CustomException) {
-            Either.Left(Failure(e.message))
         }
     }
 
@@ -74,17 +66,13 @@ class CharacterRepositoryImpl(
     ): Either<Failure, List<Comic>> {
         if (!networkHelper.isConnectionAvailable()) return Either.Left(Failure.NoConnection)
 
-        return try {
+        return ResultHandler.onRepository {
             val result = remoteDataSource.getCharacterComics(characterId, limit, offset)
             val comicEntities = comicMapper.mapResponseToEntity(result.data.results)
 
             localDataSource.insertCharacterComics(characterId, comicEntities)
 
             Either.Right(comicMapper.mapEntityToModel(comicEntities))
-        } catch (e: CustomException.Server) {
-            Either.Left(e.apiError.getFailureType())
-        } catch (e: CustomException) {
-            Either.Left(Failure(e.message))
         }
     }
 
@@ -95,17 +83,13 @@ class CharacterRepositoryImpl(
     ): Either<Failure, List<Event>> {
         if (!networkHelper.isConnectionAvailable()) return Either.Left(Failure.NoConnection)
 
-        return try {
+        return ResultHandler.onRepository {
             val result = remoteDataSource.getCharacterEvents(characterId, limit, offset)
             val eventEntities = eventMapper.mapResponseToEntity(result.data.results)
 
             localDataSource.insertCharacterEvents(characterId, eventEntities)
 
             Either.Right(eventMapper.mapEntityToModel(eventEntities))
-        } catch (e: CustomException.Server) {
-            Either.Left(e.apiError.getFailureType())
-        } catch (e: CustomException) {
-            Either.Left(Failure(e.message))
         }
     }
 
@@ -116,17 +100,13 @@ class CharacterRepositoryImpl(
     ): Either<Failure, List<Serie>> {
         if (!networkHelper.isConnectionAvailable()) return Either.Left(Failure.NoConnection)
 
-        return try {
+        return ResultHandler.onRepository {
             val result = remoteDataSource.getCharacterSeries(characterId, limit, offset)
             val serieEntities = serieMapper.mapResponseToEntity(result.data.results)
 
             localDataSource.insertCharacterSeries(characterId, serieEntities)
 
             Either.Right(serieMapper.mapEntityToModel(serieEntities))
-        } catch (e: CustomException.Server) {
-            Either.Left(e.apiError.getFailureType())
-        } catch (e: CustomException) {
-            Either.Left(Failure(e.message))
         }
     }
 
