@@ -16,7 +16,12 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme"
         tools:ignore="UnusedAttribute">
-        <activity android:name=".features.characters.CharactersActivity" android:launchMode="singleTop">
+        <activity
+            android:name=".features.characters.CharactersActivity"
+            android:launchMode="singleTop"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,7 +30,10 @@
         </activity>
         <activity
             android:name=".features.characterdetail.CharacterDetailActivity"
-            android:parentActivityName=".features.characters.CharactersActivity" />
+            android:parentActivityName=".features.characters.CharactersActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
     </application>
 
 </manifest>

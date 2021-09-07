@@ -42,6 +42,10 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
         super.onCreate(savedInstanceState)
 
         setHasOptionsMenu(true)
+
+        if (savedInstanceState != null) {
+            querySearch = savedInstanceState.getString("querySearch")
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,6 +74,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
         }
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
+            println(state.toString())
             when (state) {
                 is ResultState.Loading -> onLoading()
                 is ResultState.Error -> onError(state.message)
@@ -89,6 +94,12 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
         _binding = null
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putString("querySearch", querySearch)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search_menu, menu)
 
@@ -105,6 +116,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
         })
 
         searchView.queryHint = getString(R.string.find_your_hero)
+        searchView.setQuery(querySearch, false)
         searchView.setOnQueryTextListener(listener)
         searchView.setBackgroundColor(Color.TRANSPARENT)
 
@@ -112,7 +124,7 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
     }
 
     private fun reload() {
-        pagingController.pagingAdapter.clear()
+        pagingController.reset()
         viewModel.getCharacters(true, querySearch)
     }
 

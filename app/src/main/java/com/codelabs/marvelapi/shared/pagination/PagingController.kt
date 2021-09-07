@@ -72,4 +72,8 @@ class PagingController<T, VH : PagingAdapter.BinderViewHolder<T>>(
         }
     }
 
+    fun reset() {
+        pagingAdapter.clear()
+    }
+
 }
