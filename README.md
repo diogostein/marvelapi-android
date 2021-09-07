@@ -1,3 +1,5 @@
+*Languages: [en](README.en.md)*
+
 # Marvel API
 
 Marvel API é um aplicativo desenvolvido na linguagem Kotlin para Android que consome a API da Marvel (https://developer.marvel.com/) com propósito específico de estudos.
