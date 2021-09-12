@@ -74,7 +74,6 @@ class CharactersFragment : Fragment(R.layout.characters_fragment) {
         }
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
-            println(state.toString())
             when (state) {
                 is ResultState.Loading -> onLoading()
                 is ResultState.Error -> onError(state.message)
