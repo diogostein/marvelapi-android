@@ -21,6 +21,7 @@ A arquitetura definida segue recomendações e princípios da documentação ofi
 * Armazenamento de resultados da API no banco de dados local com Room
 * Mecanismo de paginação de resultados implementado manualmente
 * Criação de classes genéricas auxiliares a fim de evitar repetições de código (princípios de DRY code)
+* Testes unitários básicos (somente estudos)
 
 ## Como configurar
 

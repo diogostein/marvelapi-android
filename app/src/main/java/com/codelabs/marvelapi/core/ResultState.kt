@@ -3,7 +3,7 @@ package com.codelabs.marvelapi.core
 sealed class ResultState<out T> {
     object Loading : ResultState<Nothing>()
     class Error(val message: String) : ResultState<Nothing>()
-    class Completed<C>(val value: C) : ResultState<C>()
+    class Completed<T>(val value: T) : ResultState<T>()
 
     object PaginationLoading : ResultState<Nothing>()
     class PaginationError(val message: String) : ResultState<Nothing>()

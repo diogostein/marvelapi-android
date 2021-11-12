@@ -21,6 +21,7 @@ The defined architecture follows the recommendations and principles of the offic
 * Storage of API results in local database with Room
 * Manually implemented results paging engine
 * Creation of auxiliary generic classes in order to avoid code repetitions (DRY code principles)
+* Basic Unit Tests (only for study)
 
 ## How to setup
 
